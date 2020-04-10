@@ -1,19 +1,53 @@
-export type PokerAction = PokerActionJoinRoom | PokerActionCreateRoom
+/*
+ * Actions
+ */
 
-export interface PokerActionJoinRoom {
-  type: 'JOIN_ROOM'
-  payload: {
-    roomId: string
-    name: string
-  }
+export type PokerAction =
+  | PokerActionCreateRoom
+  | PokerActionJoinRoom
+  | PokerActionStartGame
+  | PokerActionBet
+  | PokerActionFold
+  | PokerActionCheck
+
+export type PokerActionPayload<T> = T & {
+  roomId: string
 }
 
 export interface PokerActionCreateRoom {
   type: 'CREATE_ROOM'
-  payload: {
-    roomId: string
-  }
+  payload: PokerActionPayload<{}>
 }
+
+export interface PokerActionJoinRoom {
+  type: 'JOIN_ROOM'
+  payload: PokerActionPayload<{ userId: string }>
+}
+
+export interface PokerActionStartGame {
+  type: 'START_GAME'
+  payload: PokerActionPayload<{}>
+}
+
+export interface PokerActionBet {
+  type: 'BET'
+
+  payload: PokerActionPayload<{ amount: number }>
+}
+
+export interface PokerActionFold {
+  type: 'FOLD'
+  payload: PokerActionPayload<{}>
+}
+
+export interface PokerActionCheck {
+  type: 'CHECK'
+  payload: PokerActionPayload<{}>
+}
+
+/*
+ * Entities
+ */
 
 export type CardSymbol = 'heart' | 'diamond' | 'clover' | 'spade'
 
@@ -25,6 +59,7 @@ export interface Card {
 export interface Player {
   id: string
   stack: number
+  betting: number
   hand: [Card, Card] | []
   position: number
   isActive: boolean
@@ -39,4 +74,5 @@ export interface Room {
   id: string
   board: Board
   players: Player[]
+  turnPlayerId: string
 }

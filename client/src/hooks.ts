@@ -17,37 +17,40 @@ ws.onclose = e => {
   console.log('Socket is closed. Reconnect will be attempted in 10 millisecond.', e.reason)
 }
 
-export function useRoom() {
+export function useRoomDispatch() {
+  if (!userId) {
+    throw new Error()
+  }
   const [room, setRoom] = React.useState<Room | undefined>()
 
-  const send = useSocket(room => {
+  const dispatch = useSocket(room => {
     setRoom(room)
   })
 
   React.useEffect(() => {
-    if (send) {
-      send({
+    if (dispatch) {
+      dispatch({
         type: 'CREATE_ROOM',
         payload: {
           roomId,
         },
       })
     }
-  }, [send === undefined])
+  }, [dispatch === undefined])
 
   React.useEffect(() => {
-    if (room && send) {
-      send({
+    if (room && dispatch) {
+      dispatch({
         type: 'JOIN_ROOM',
         payload: {
           roomId,
-          name: userId!,
+          userId,
         },
       })
     }
   }, [room === undefined])
 
-  return room
+  return { roomId, room, userId, dispatch }
 }
 
 type Handler = (p: Room) => void

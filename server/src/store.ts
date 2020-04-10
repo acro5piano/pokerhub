@@ -1,10 +1,51 @@
 import { createStore } from 'redux'
-import { PokerAction, Room } from '@fastpoker/core'
+import { PokerAction, Room, Player } from '@fastpoker/core'
+
+function getRoomMaybe(rooms: Room[], roomId: string): Room | undefined {
+  return rooms.find(r => r.id === roomId)
+}
+
+function getRoom(rooms: Room[], roomId: string): Room {
+  const room = getRoomMaybe(rooms, roomId)
+  if (!room) {
+    throw new Error('rooms is missing')
+  }
+  return room
+}
+
+function getPlayerMaybe(room: Room, playerId: string): Player | undefined {
+  return room.players.find(p => p.id === playerId)
+}
+
+function getPlayer(room: Room, playerId: string): Player {
+  const player = getPlayerMaybe(room, playerId)
+  if (!player) {
+    throw new Error('player is missing')
+  }
+  return player
+}
+
+function getNextTurnPlayer(room: Room): Player {
+  const currentPlayer = getPlayer(room, room.turnPlayerId)
+  const nextPlayer = room.players.find(p => p.position === currentPlayer.position + 1)
+  if (!nextPlayer) {
+    return room.players[0]
+  }
+  return nextPlayer
+}
+
+function getCurrentTurnPlayer(room: Room): Player {
+  const currentPlayer = getPlayer(room, room.turnPlayerId)
+  if (!currentPlayer) {
+    throw new Error('current player is missing')
+  }
+  return currentPlayer
+}
 
 function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
   switch (action.type) {
-    case 'CREATE_ROOM':
-      if (rooms.find(r => action.payload.roomId === r.id)) {
+    case 'CREATE_ROOM': {
+      if (getRoomMaybe(rooms, action.payload.roomId)) {
         return rooms
       }
       const newRoom: Room = {
@@ -14,24 +55,50 @@ function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
           pot: 0,
         },
         players: [],
+        turnPlayerId: '',
       }
       return [...rooms, newRoom]
-    case 'JOIN_ROOM':
-      const room = rooms.find(r => r.id === action.payload.roomId)
-      if (!room) {
-        return rooms
-      }
-      if (room.players.find(p => p.id === action.payload.name)) {
+    }
+
+    case 'JOIN_ROOM': {
+      const room = getRoom(rooms, action.payload.roomId)
+      if (getPlayerMaybe(room, action.payload.userId)) {
         return rooms
       }
       room.players.push({
-        id: action.payload.name,
-        stack: 0,
+        id: action.payload.userId,
+        stack: 1500,
+        betting: 0,
         hand: [],
         position: room.players.length + 1,
-        isActive: false,
+        isActive: true,
       })
       return rooms.map(r => (r.id === action.payload.roomId ? room : r))
+    }
+
+    case 'START_GAME': {
+      const room = getRoom(rooms, action.payload.roomId)
+      room.turnPlayerId = room.players[0].id
+      return rooms.map(r => (r.id === action.payload.roomId ? room : r))
+    }
+
+    case 'BET': {
+      const room = getRoom(rooms, action.payload.roomId)
+      const player = getCurrentTurnPlayer(room)
+      room.board.pot += action.payload.amount
+      player.stack -= action.payload.amount
+      player.betting += action.payload.amount
+      room.players = room.players.map(p => (p.id === player.id ? player : p))
+      room.turnPlayerId = getNextTurnPlayer(room).id
+      return rooms.map(r => (r.id === action.payload.roomId ? room : r))
+    }
+
+    case 'CHECK': {
+      const room = getRoom(rooms, action.payload.roomId)
+      room.turnPlayerId = getNextTurnPlayer(room).id
+      return rooms.map(r => (r.id === action.payload.roomId ? room : r))
+    }
+
     default:
       return rooms
   }
