@@ -1,0 +1,14 @@
+{
+  "name": "fastpoker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:acro5piano/fastpoker",
+  "author": "gosho-kazuya <ketsume0211@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lerna": "^3.20.2",
+    "lint-staged": "^10.1.3",
+    "prettier": "^2.0.4"
+  }
+}
