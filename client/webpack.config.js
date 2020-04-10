@@ -14,6 +14,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.json'],
+    alias: {
+      'react-native': 'react-native-web',
+    },
   },
   devServer: {
     port,
