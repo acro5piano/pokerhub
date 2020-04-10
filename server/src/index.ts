@@ -1,5 +1,6 @@
 import WebSocket from 'ws'
-import { PokerPayload } from '@fastpoker/core'
+import { PokerAction } from '@fastpoker/core'
+import store from './store'
 
 const wss = new WebSocket.Server({ port: 30762 })
 
@@ -11,10 +12,20 @@ wss.on('connection', (ws, { url }) => {
   Object.assign(ws, { room: url!.slice(1) })
 
   ws.on('message', data => {
-    const message: PokerPayload = JSON.parse(String(data))
+    if (!data) {
+      return
+    }
+    console.log(`message received: ${String(data)}`)
+    const message: PokerAction = JSON.parse(String(data))
+    store.dispatch(message)
     wss.clients.forEach(client => {
-      if (getRoom(client) === message.payload.room) {
-        client.send(data)
+      const roomId = getRoom(client)
+      if (roomId !== message?.payload?.roomId) {
+        return
+      }
+      const room = store.getState().find(r => r.id === roomId)
+      if (room) {
+        client.send(JSON.stringify(room))
       }
     })
   })
