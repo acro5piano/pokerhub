@@ -2,5 +2,11 @@
   "name": "@fastpoker/server",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "peerjs": "^1.2.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.3"
+  }
 }
