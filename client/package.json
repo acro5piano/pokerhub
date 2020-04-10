@@ -6,8 +6,11 @@
   "scripts": {
     "start": "webpack-dev-server"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ws": "^7.2.3"
+  },
   "devDependencies": {
+    "@types/ws": "^7.2.3",
     "html-webpack-plugin": "^4.2.0",
     "ts-loader": "^6.2.2",
     "typescript": "^3.8.3",
