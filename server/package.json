@@ -3,9 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "dependencies": {
-    "peerjs": "^1.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^13.11.1",
     "typescript": "^3.8.3"
