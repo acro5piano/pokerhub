@@ -13,7 +13,7 @@ test.beforeEach(() => {
   )
 })
 
-test('CREATE_ROOM', t => {
+test('GAME', t => {
   const roomId = 'foo'
 
   times(5, () => {
@@ -36,7 +36,7 @@ test('CREATE_ROOM', t => {
           pot: 0,
           dealerPlayerId: '',
           turnPlayerId: '',
-          blind: 100,
+          bigBlind: 100,
           anti: 0,
         },
         players: [],
@@ -69,7 +69,7 @@ test('CREATE_ROOM', t => {
           pot: 0,
           dealerPlayerId: '',
           turnPlayerId: '',
-          blind: 100,
+          bigBlind: 100,
           anti: 0,
         },
         players: [
@@ -80,6 +80,7 @@ test('CREATE_ROOM', t => {
             hand: [],
             position: 1,
             isActive: true,
+            checed: false,
           },
           {
             id: 'player2',
@@ -88,6 +89,7 @@ test('CREATE_ROOM', t => {
             hand: [],
             position: 2,
             isActive: true,
+            checed: false,
           },
           {
             id: 'player3',
@@ -96,6 +98,7 @@ test('CREATE_ROOM', t => {
             hand: [],
             position: 3,
             isActive: true,
+            checed: false,
           },
         ],
       },
@@ -116,12 +119,12 @@ test('CREATE_ROOM', t => {
         id: 'foo',
         isGameStarted: true,
         board: {
-          cards: [],
-          pot: 0,
           dealerPlayerId: 'player1',
-          turnPlayerId: 'player1',
-          blind: 100,
+          bigBlind: 100,
           anti: 0,
+          cards: [],
+          pot: 150,
+          turnPlayerId: 'player1',
         },
         players: [
           {
@@ -134,28 +137,31 @@ test('CREATE_ROOM', t => {
             ],
             position: 1,
             isActive: true,
+            checed: false,
           },
           {
             id: 'player2',
-            stack: 1500,
-            betting: 0,
+            stack: 1450,
+            betting: 50,
             hand: [
               { num: 3, sym: 'spade' },
               { num: 4, sym: 'spade' },
             ],
             position: 2,
             isActive: true,
+            checed: false,
           },
           {
             id: 'player3',
-            stack: 1500,
-            betting: 0,
+            stack: 1400,
+            betting: 100,
             hand: [
               { num: 5, sym: 'spade' },
               { num: 6, sym: 'spade' },
             ],
             position: 3,
             isActive: true,
+            checed: false,
           },
         ],
       },
@@ -167,7 +173,7 @@ test('CREATE_ROOM', t => {
     type: 'BET',
     payload: {
       roomId,
-      amount: 100,
+      amount: 300,
     },
   })
 
@@ -177,39 +183,173 @@ test('CREATE_ROOM', t => {
         id: 'foo',
         isGameStarted: true,
         board: {
-          cards: [],
-          pot: 100,
-          turnPlayerId: 'player2',
           dealerPlayerId: 'player1',
-          blind: 100,
+          bigBlind: 100,
           anti: 0,
+          cards: [],
+          pot: 450,
+          turnPlayerId: 'player2',
         },
         players: [
           {
             id: 'player1',
-            stack: 1400,
-            betting: 100,
+            stack: 1200,
+            betting: 300,
             hand: [
               { num: 1, sym: 'spade' },
               { num: 2, sym: 'spade' },
             ],
             position: 1,
             isActive: true,
+            checed: false,
           },
           {
             id: 'player2',
-            stack: 1500,
-            betting: 0,
+            stack: 1450,
+            betting: 50,
             hand: [
               { num: 3, sym: 'spade' },
               { num: 4, sym: 'spade' },
             ],
             position: 2,
             isActive: true,
+            checed: false,
           },
           {
             id: 'player3',
-            stack: 1500,
+            stack: 1400,
+            betting: 100,
+            hand: [
+              { num: 5, sym: 'spade' },
+              { num: 6, sym: 'spade' },
+            ],
+            position: 3,
+            isActive: true,
+            checed: false,
+          },
+        ],
+      },
+    ],
+    store.getState(),
+  )
+
+  // Player 2 fold
+  store.dispatch({
+    type: 'FOLD',
+    payload: {
+      roomId,
+    },
+  })
+
+  t.deepEqual(
+    [
+      {
+        id: 'foo',
+        isGameStarted: true,
+        board: {
+          dealerPlayerId: 'player1',
+          bigBlind: 100,
+          anti: 0,
+          cards: [],
+          pot: 450,
+          turnPlayerId: 'player3',
+        },
+        players: [
+          {
+            id: 'player1',
+            stack: 1200,
+            betting: 300,
+            hand: [
+              { num: 1, sym: 'spade' },
+              { num: 2, sym: 'spade' },
+            ],
+            position: 1,
+            isActive: true,
+            checed: false,
+          },
+          {
+            id: 'player2',
+            stack: 1450,
+            betting: 50,
+            hand: [
+              { num: 3, sym: 'spade' },
+              { num: 4, sym: 'spade' },
+            ],
+            position: 2,
+            isActive: false,
+            checed: false,
+          },
+          {
+            id: 'player3',
+            stack: 1400,
+            betting: 100,
+            hand: [
+              { num: 5, sym: 'spade' },
+              { num: 6, sym: 'spade' },
+            ],
+            position: 3,
+            isActive: true,
+            checed: false,
+          },
+        ],
+      },
+    ],
+    store.getState(),
+  )
+
+  // Player 3 call
+  store.dispatch({
+    type: 'CALL',
+    payload: {
+      roomId,
+    },
+  })
+
+  t.deepEqual(
+    [
+      {
+        id: 'foo',
+        isGameStarted: true,
+        board: {
+          dealerPlayerId: 'player1',
+          bigBlind: 100,
+          anti: 0,
+          cards: [
+            { num: 7, sym: 'spade' },
+            { num: 8, sym: 'spade' },
+            { num: 9, sym: 'spade' },
+          ],
+          pot: 650,
+          turnPlayerId: 'player3', // In Flop, starting from smallBlind
+        },
+        players: [
+          {
+            id: 'player1',
+            stack: 1200,
+            betting: 0,
+            hand: [
+              { num: 1, sym: 'spade' },
+              { num: 2, sym: 'spade' },
+            ],
+            position: 1,
+            isActive: true,
+            checed: false,
+          },
+          {
+            id: 'player2',
+            stack: 1450,
+            betting: 0,
+            hand: [
+              { num: 3, sym: 'spade' },
+              { num: 4, sym: 'spade' },
+            ],
+            position: 2,
+            isActive: false,
+            checed: false,
+          },
+          {
+            id: 'player3',
+            stack: 1200,
             betting: 0,
             hand: [
               { num: 5, sym: 'spade' },
@@ -217,10 +357,148 @@ test('CREATE_ROOM', t => {
             ],
             position: 3,
             isActive: true,
+            checed: false,
           },
         ],
       },
-    ] as Room[],
+    ],
+    store.getState(),
+  )
+
+  // Player 3 check
+  store.dispatch({
+    type: 'CHECK',
+    payload: {
+      roomId,
+    },
+  })
+
+  t.deepEqual(
+    [
+      {
+        id: 'foo',
+        isGameStarted: true,
+        board: {
+          dealerPlayerId: 'player1',
+          bigBlind: 100,
+          anti: 0,
+          cards: [
+            { num: 7, sym: 'spade' },
+            { num: 8, sym: 'spade' },
+            { num: 9, sym: 'spade' },
+          ],
+          pot: 650,
+          turnPlayerId: 'player1',
+        },
+        players: [
+          {
+            id: 'player1',
+            stack: 1200,
+            betting: 0,
+            hand: [
+              { num: 1, sym: 'spade' },
+              { num: 2, sym: 'spade' },
+            ],
+            position: 1,
+            isActive: true,
+            checed: false,
+          },
+          {
+            id: 'player2',
+            stack: 1450,
+            betting: 0,
+            hand: [
+              { num: 3, sym: 'spade' },
+              { num: 4, sym: 'spade' },
+            ],
+            position: 2,
+            isActive: false,
+            checed: false,
+          },
+          {
+            id: 'player3',
+            stack: 1200,
+            betting: 0,
+            hand: [
+              { num: 5, sym: 'spade' },
+              { num: 6, sym: 'spade' },
+            ],
+            position: 3,
+            isActive: true,
+            checed: true,
+          },
+        ],
+      },
+    ],
+    store.getState(),
+  )
+
+  // player 1 also check.
+  store.dispatch({
+    type: 'CHECK',
+    payload: {
+      roomId,
+    },
+  })
+
+  t.deepEqual(
+    [
+      {
+        id: 'foo',
+        isGameStarted: true,
+        board: {
+          dealerPlayerId: 'player1',
+          bigBlind: 100,
+          anti: 0,
+          cards: [
+            { num: 7, sym: 'spade' },
+            { num: 8, sym: 'spade' },
+            { num: 9, sym: 'spade' },
+            { num: 10, sym: 'spade' },
+          ],
+          pot: 650,
+          turnPlayerId: 'player3',
+        },
+        players: [
+          {
+            id: 'player1',
+            stack: 1200,
+            betting: 0,
+            hand: [
+              { num: 1, sym: 'spade' },
+              { num: 2, sym: 'spade' },
+            ],
+            position: 1,
+            isActive: true,
+            checed: true,
+          },
+          {
+            id: 'player2',
+            stack: 1450,
+            betting: 0,
+            hand: [
+              { num: 3, sym: 'spade' },
+              { num: 4, sym: 'spade' },
+            ],
+            position: 2,
+            isActive: false,
+            checed: false,
+          },
+          {
+            id: 'player3',
+            stack: 1200,
+            betting: 0,
+            hand: [
+              { num: 5, sym: 'spade' },
+              { num: 6, sym: 'spade' },
+            ],
+            position: 3,
+            isActive: true,
+            checed: true,
+          },
+        ],
+      },
+    ],
     store.getState(),
   )
 })

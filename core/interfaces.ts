@@ -9,6 +9,7 @@ export type PokerAction =
   | PokerActionBet
   | PokerActionFold
   | PokerActionCheck
+  | PokerActionCall
 
 export type PokerActionPayload<T> = T & {
   roomId: string
@@ -45,6 +46,11 @@ export interface PokerActionCheck {
   payload: PokerActionPayload<{}>
 }
 
+export interface PokerActionCall {
+  type: 'CALL'
+  payload: PokerActionPayload<{}>
+}
+
 /*
  * Entities
  */
@@ -65,6 +71,7 @@ export interface Player {
   hand: [Card, Card] | Card[]
   position: number
   isActive: boolean
+  checed: boolean
 }
 
 export interface Board {
@@ -72,7 +79,7 @@ export interface Board {
   pot: number
   turnPlayerId: string
   dealerPlayerId: string
-  blind: number
+  bigBlind: number
   anti: number
 }
 
