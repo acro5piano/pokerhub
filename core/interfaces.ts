@@ -70,11 +70,15 @@ export interface Player {
 export interface Board {
   cards: Card[]
   pot: number
+  turnPlayerId: string
+  dealerPlayerId: string
+  blind: number
+  anti: number
 }
 
 export interface Room {
   id: string
   board: Board
   players: Player[]
-  turnPlayerId: string
+  isGameStarted: boolean
 }

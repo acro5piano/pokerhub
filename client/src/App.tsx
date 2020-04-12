@@ -2,6 +2,7 @@ import React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
 import { useRoomDispatch } from './hooks'
 import { Button } from './components/Button'
+import { Hand } from './components/Hand'
 
 export function App() {
   const { room, roomId, userId, dispatch } = useRoomDispatch()
@@ -29,45 +30,44 @@ export function App() {
     })
   }
 
+  const isMyTurn = room.board.turnPlayerId === userId
+
+  if (!room.isGameStarted) {
+    return (
+      <View>
+        <Button onPress={start}>Start</Button>
+      </View>
+    )
+  }
+
   return (
     <View>
-      {room.turnPlayerId === '' ? (
-        <Button onPress={start}>Start</Button>
-      ) : (
-        <>
-          <Text>{room.board.pot}</Text>
-          <Text style={{ width: 100 }}>Name</Text>
-          <Text style={{ width: 100 }}>Betting</Text>
-          <Text style={{ width: 100 }}>Stack</Text>
-          {room.players.map(player => (
-            <View
-              key={player.id}
-              style={{
-                flexDirection: 'row',
-              }}
-            >
-              <View style={{ width: 100 }}>
-                {room.turnPlayerId === player.id && <ActivityIndicator />}
-              </View>
-              <View style={{ flexDirection: 'row' }}>
-                <Text style={{ width: 100 }}>
-                  {player.id}
-                  {player.id === userId && '(You)'}
-                </Text>
-                <Text style={{ width: 100 }}>{player.betting}</Text>
-                <Text style={{ width: 100 }}>{player.stack}</Text>
-              </View>
-              {player.id === userId &&
-                player.hand.map((card, i) => (
-                  <View key={i}>
-                    <Text>{card.sym}</Text>
-                  </View>
-                ))}
-            </View>
-          ))}
-          {room.turnPlayerId === userId && <Button onPress={bet}>Bet</Button>}
-        </>
-      )}
+      <Text>{room.board.pot}</Text>
+      <Text style={{ width: 100 }}>Name</Text>
+      <Text style={{ width: 100 }}>Betting</Text>
+      <Text style={{ width: 100 }}>Stack</Text>
+      {room.players.map(player => (
+        <View
+          key={player.id}
+          style={{
+            flexDirection: 'row',
+          }}
+        >
+          <View style={{ width: 100 }}>
+            {room.board.turnPlayerId === player.id && <ActivityIndicator />}
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ width: 100 }}>
+              {player.id}
+              {player.id === userId && '(You)'}
+            </Text>
+            <Text style={{ width: 100 }}>{player.betting}</Text>
+            <Text style={{ width: 100 }}>{player.stack}</Text>
+          </View>
+          {player.id === userId && <Hand cards={player.hand} />}
+        </View>
+      ))}
+      {isMyTurn && <Button onPress={bet}>Bet</Button>}
     </View>
   )
 }

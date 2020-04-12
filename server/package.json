@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -T src/index.ts",
+    "test": "ava",
     "start": "ts-node -T src/index.ts"
   },
   "dependencies": {
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@types/node": "^13.11.1",
     "@types/ws": "^7.2.3",
+    "ava": "^3.6.0",
     "nodemon": "^2.0.3"
   }
 }

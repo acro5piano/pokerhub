@@ -26,7 +26,7 @@ function getPlayer(room: Room, playerId: string): Player {
 }
 
 function getNextTurnPlayer(room: Room): Player {
-  const currentPlayer = getPlayer(room, room.turnPlayerId)
+  const currentPlayer = getPlayer(room, room.board.turnPlayerId)
   const nextPlayer = room.players.find(p => p.position === currentPlayer.position + 1)
   if (!nextPlayer) {
     return room.players[0]
@@ -35,7 +35,7 @@ function getNextTurnPlayer(room: Room): Player {
 }
 
 function getCurrentTurnPlayer(room: Room): Player {
-  const currentPlayer = getPlayer(room, room.turnPlayerId)
+  const currentPlayer = getPlayer(room, room.board.turnPlayerId)
   if (!currentPlayer) {
     throw new Error('current player is missing')
   }
@@ -53,9 +53,13 @@ function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
         board: {
           cards: [],
           pot: 0,
+          turnPlayerId: '',
+          dealerPlayerId: '',
+          blind: 100,
+          anti: 0,
         },
         players: [],
-        turnPlayerId: '',
+        isGameStarted: false,
       }
       return [...rooms, newRoom]
     }
@@ -81,7 +85,9 @@ function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
       room.players.forEach(player => {
         player.hand = [createCard(), createCard()]
       })
-      room.turnPlayerId = room.players[0].id
+      room.board.turnPlayerId = room.players[0].id
+      room.board.dealerPlayerId = room.players[0].id
+      room.isGameStarted = true
       return rooms.map(r => (r.id === action.payload.roomId ? room : r))
     }
 
@@ -92,13 +98,13 @@ function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
       player.stack -= action.payload.amount
       player.betting += action.payload.amount
       room.players = room.players.map(p => (p.id === player.id ? player : p))
-      room.turnPlayerId = getNextTurnPlayer(room).id
+      room.board.turnPlayerId = getNextTurnPlayer(room).id
       return rooms.map(r => (r.id === action.payload.roomId ? room : r))
     }
 
     case 'CHECK': {
       const room = getRoom(rooms, action.payload.roomId)
-      room.turnPlayerId = getNextTurnPlayer(room).id
+      room.board.turnPlayerId = getNextTurnPlayer(room).id
       return rooms.map(r => (r.id === action.payload.roomId ? room : r))
     }
 
@@ -109,6 +115,8 @@ function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
 
 const store = createStore(reducer)
 
-store.subscribe(() => console.log(JSON.stringify(store.getState(), undefined, 2)))
+if (process.env.NODE_ENV === 'development') {
+  store.subscribe(() => console.log(JSON.stringify(store.getState(), undefined, 2)))
+}
 
 export default store
