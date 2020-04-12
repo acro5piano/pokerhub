@@ -1,5 +1,5 @@
 import { createStore } from 'redux'
-import { PokerAction, Room, Player } from '@fastpoker/core'
+import { PokerAction, Room, Player, createCard } from '@fastpoker/core'
 
 function getRoomMaybe(rooms: Room[], roomId: string): Room | undefined {
   return rooms.find(r => r.id === roomId)
@@ -78,6 +78,9 @@ function reducer(rooms: Room[] = [], action: PokerAction): Room[] {
 
     case 'START_GAME': {
       const room = getRoom(rooms, action.payload.roomId)
+      room.players.forEach(player => {
+        player.hand = [createCard(), createCard()]
+      })
       room.turnPlayerId = room.players[0].id
       return rooms.map(r => (r.id === action.payload.roomId ? room : r))
     }

@@ -49,16 +49,20 @@ export function App() {
               <View style={{ width: 100 }}>
                 {room.turnPlayerId === player.id && <ActivityIndicator />}
               </View>
-              <View
-                style={{
-                  backgroundColor: player.id === userId ? '#0275f2' : '#fff',
-                  flexDirection: 'row',
-                }}
-              >
-                <Text style={{ width: 100 }}>{player.id}</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={{ width: 100 }}>
+                  {player.id}
+                  {player.id === userId && '(You)'}
+                </Text>
                 <Text style={{ width: 100 }}>{player.betting}</Text>
                 <Text style={{ width: 100 }}>{player.stack}</Text>
               </View>
+              {player.id === userId &&
+                player.hand.map((card, i) => (
+                  <View key={i}>
+                    <Text>{card.sym}</Text>
+                  </View>
+                ))}
             </View>
           ))}
           {room.turnPlayerId === userId && <Button onPress={bet}>Bet</Button>}
