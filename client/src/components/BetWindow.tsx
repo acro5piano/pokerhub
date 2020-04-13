@@ -15,7 +15,7 @@ export function BetWindow({ onBet }: BetWindowProps) {
 
   return (
     <View>
-      <TextInput value={amount} keyboardType="numeric" onChange={t => setAmount(t.target) as any} />
+      <TextInput value={amount} keyboardType="numeric" onChangeText={setAmount} />
       <Button onPress={_onBet}>Bet</Button>
     </View>
   )

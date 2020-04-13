@@ -1,6 +1,7 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { View } from 'react-native'
 import { Card } from '@fastpoker/core'
+import { PlayingCard } from './PlayingCard'
 
 interface HandProps {
   cards: Card[]
@@ -8,12 +9,10 @@ interface HandProps {
 
 export function Hand({ cards }: HandProps) {
   return (
-    <View>
+    <View style={{ flexDirection: 'row' }}>
       {cards.map(card => (
         <View key={`${card.sym}${card.num}`}>
-          <Text>
-            {card.sym} / {card.num}
-          </Text>
+          <PlayingCard card={card} />
         </View>
       ))}
     </View>
