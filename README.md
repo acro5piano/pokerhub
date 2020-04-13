@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/acro5piano/fastpoker.svg?style=svg)](https://circleci.com/gh/acro5piano/fastpoker)
+
 # fastpoker
 
 An instant poker app: just share url to play with friends
