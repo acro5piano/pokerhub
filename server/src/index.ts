@@ -23,7 +23,7 @@ wss.on('connection', (ws, { url }) => {
       if (roomId !== message?.payload?.roomId) {
         return
       }
-      const room = store.getState().find(r => r.id === roomId)
+      const room = store.getState().findRoom(roomId)
       if (room) {
         client.send(JSON.stringify(room))
       }

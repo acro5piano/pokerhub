@@ -1,11 +1,19 @@
 import React from 'react'
 import { ActivityIndicator, Text, View } from 'react-native'
+import { getRandomString } from '@fastpoker/core'
 import { useRoomDispatch } from './hooks'
 import { Button } from './components/Button'
 import { Hand } from './components/Hand'
+import { BetWindow } from './components/BetWindow'
 
 export function App() {
   const { room, roomId, userId, dispatch } = useRoomDispatch()
+
+  React.useEffect(() => {
+    if (!roomId) {
+      location.href = `/${getRandomString()}`
+    }
+  }, [])
 
   if (!dispatch || !room || !roomId || !userId) {
     return <ActivityIndicator />
@@ -67,7 +75,7 @@ export function App() {
           {player.id === userId && <Hand cards={player.hand} />}
         </View>
       ))}
-      {isMyTurn && <Button onPress={bet}>Bet</Button>}
+      {isMyTurn && <BetWindow onBet={bet} />}
     </View>
   )
 }
