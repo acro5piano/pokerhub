@@ -748,14 +748,14 @@ test('GAME', t => {
           bigBlind: 100,
           anti: 0,
           cards: [],
-          pot: 0,
-          turnPlayerId: 'player1',
+          pot: 150,
+          turnPlayerId: 'player2',
         },
         players: [
           {
             id: 'player1',
-            stack: 2450,
-            betting: 0,
+            stack: 2350,
+            betting: 100,
             hand: [
               { num: 12, sym: 'spade' },
               { num: 13, sym: 'spade' },
@@ -778,8 +778,8 @@ test('GAME', t => {
           },
           {
             id: 'player3',
-            stack: 600,
-            betting: 0,
+            stack: 550,
+            betting: 50,
             hand: [
               { num: 3, sym: 'heart' },
               { num: 4, sym: 'heart' },

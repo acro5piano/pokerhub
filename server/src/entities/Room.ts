@@ -32,14 +32,16 @@ export class Room implements IRoom {
     return newPlayer
   }
 
-  startGame(): void {
+  startGame(dealer?: Player): void {
     this.players.forEach(player => {
       player.setHand()
+      player.isActive = true
+      player.checed = false
     })
-    this.board.dealerPlayerId = this.players[0].id
+    this.board.dealerPlayerId = (dealer || this.players[0]).id
 
     const { bigBlind } = this.board
-    this.board.pot += bigBlind * 1.5
+    this.board.pot = bigBlind * 1.5
 
     const smallBlindPlayer = this.getSmallBlind()
     smallBlindPlayer.bet(bigBlind / 2)
@@ -47,7 +49,7 @@ export class Room implements IRoom {
     const bigBlindPlayer = this.getBigBlind()
     bigBlindPlayer.bet(bigBlind)
 
-    const underTheGun = this.getNextTurnPlayer(bigBlindPlayer)
+    const underTheGun = this.getAdjacentPlayer(bigBlindPlayer, 1)
     this.board.turnPlayerId = underTheGun.id
     this.isGameStarted = true
   }
@@ -97,13 +99,14 @@ export class Room implements IRoom {
         winners.forEach(winner => {
           winner.stack += this.board.pot / winners.length
         })
-        this.players.forEach(player => {
-          player.setHand()
-          player.isActive = true
-        })
-        this.board.dealerPlayerId = this.getSmallBlind().id
-        this.board.turnPlayerId = this.getNextTurnPlayer(this.getSmallBlind()).id
-        this.board.pot = 0
+        this.startGame(this.getSmallBlind())
+        // this.players.forEach(player => {
+        //   player.setHand()
+        //   player.isActive = true
+        // })
+        // this.board.dealerPlayerId = this.getSmallBlind().id
+        // this.board.turnPlayerId = this.getNextTurnPlayer(this.getSmallBlind()).id
+        // this.board.pot = 0
       }
     } else {
       this.board.turnPlayerId = this.getNextTurnPlayer().id
@@ -128,19 +131,18 @@ export class Room implements IRoom {
   }
 
   private getSmallBlind(): Player {
-    const nextPosition = (this.getDealer().position % this.players.length) + 1
-    const player = this.players.find(p => p.position === nextPosition)
-    if (!player) {
-      throw new Error('smallBlind is missing. this is a bug')
-    }
-    return player
+    return this.getAdjacentPlayer(this.getDealer(), 1)
   }
 
   private getBigBlind(): Player {
-    const nextPosition = (this.getDealer().position % this.players.length) + 2
-    const player = this.players.find(p => p.position === nextPosition)
+    return this.getAdjacentPlayer(this.getDealer(), 2)
+  }
+
+  private getAdjacentPlayer(targetPlayer: Player, by: number) {
+    const position = (targetPlayer.position + by) % this.players.length
+    const player = this.players.find(p => p.position === position)
     if (!player) {
-      throw new Error('smallBlind is missing. this is a bug')
+      throw new Error('Adjacent player not found, this is a bug')
     }
     return player
   }
@@ -151,13 +153,7 @@ export class Room implements IRoom {
 
   private getNextTurnPlayer(player?: Player): Player {
     const targetPlayer = player || this.getCurrentTurnPlayer()
-    // const nextPosition =
-    //   this.board.cards.length === 0 && this.getBigBlind().id === this.board.turnPlayerId
-    //     ? this.getSmallBlind().position
-    //     : targetPlayer.position
-    const nextPlayer = this.players.find(
-      p => p.position === (targetPlayer.position + 1) % this.players.length,
-    )
+    const nextPlayer = this.getAdjacentPlayer(targetPlayer, 1)
     if (!nextPlayer) {
       throw new Error('Logic error: there is only 0 or 1 active player')
     }
