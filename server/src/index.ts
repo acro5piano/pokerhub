@@ -6,7 +6,7 @@ import fs from 'fs'
 import path from 'path'
 
 const server = http.createServer((req, res) => {
-  const basePath = path.join(__dirname, '../../client/build')
+  const basePath = path.join(__dirname, '../public')
   fs.readFile(`${basePath}${req.url}`, (err, data) => {
     res.writeHead(200)
     if (err) {
@@ -54,7 +54,7 @@ wss.on('connection', (ws, { url }) => {
   })
 })
 
-server.listen(30762, () => {
+server.listen(process.env.PORT || 30762, () => {
   console.log('> Listening to http://localhost:30762')
 })
 

@@ -14,3 +14,12 @@ An instant poker app: just share url to play with friends
 - [ ] Player Died
 - [ ] Add various case tests
 - [ ] Build stylish UI
+
+# Deploy
+
+```
+docker build -t web .
+heroku container:login
+heroku container:push web
+heroku container:release web
+```

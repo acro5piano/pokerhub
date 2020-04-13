@@ -42,7 +42,7 @@ module.exports = {
       template: './index.html',
     }),
     new webpack.DefinePlugin({
-      'process.env.PEER_ID': JSON.stringify(process.env.PEER_ID),
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
   ],
 }

@@ -11,7 +11,12 @@ if (!userId) {
 
 const roomId = window.location.pathname.split('/')[1]
 
-const ws = new WebSocket(`ws://localhost:30762/${roomId}`)
+const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
+const url =
+  process.env.NODE_ENV === 'production'
+    ? `${protocol}://${window.location.hostname}/${roomId}`
+    : `${protocol}://localhost:30762/${roomId}`
+const ws = new WebSocket(url)
 
 ws.onclose = e => {
   // TODO: reconnect
