@@ -51,7 +51,7 @@ function reducer(repository: Repository = new Repository(), action: PokerAction)
 
 const store = createStore(reducer)
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV !== 'test') {
   store.subscribe(() => console.log(JSON.stringify(store.getState(), undefined, 2)))
 }
 

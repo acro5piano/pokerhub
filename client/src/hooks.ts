@@ -9,11 +9,12 @@ if (!userId) {
   localStorage.setItem('userId', userId)
 }
 
-const roomId = window.location.hash.slice(1)
+const roomId = window.location.pathname.split('/')[1]
 
 const ws = new WebSocket(`ws://localhost:30762/${roomId}`)
 
 ws.onclose = e => {
+  // TODO: reconnect
   console.log('Socket is closed. Reconnect will be attempted in 10 millisecond.', e.reason)
 }
 

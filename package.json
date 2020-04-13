@@ -14,7 +14,9 @@
     ]
   },
   "scripts": {
-    "dev": "wsrun -m --parallel dev"
+    "dev": "wsrun -m --parallel dev",
+    "tsc": "wsrun --parallel --exclude @fastpoker/core tsc",
+    "test": "wsrun --exclude-missing test"
   },
   "devDependencies": {
     "husky": "^4.2.5",
