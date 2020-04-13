@@ -23,3 +23,4 @@ jobs:
 
       - run: yarn tsc
       - run: yarn test
+      - run: yarn workspace @fastpoker/client build
