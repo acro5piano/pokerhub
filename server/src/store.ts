@@ -49,10 +49,16 @@ function reducer(repository: Repository = new Repository(), action: PokerAction)
   return repository
 }
 
-const store = createStore(reducer)
+export function makeStore() {
+  return createStore(reducer)
+}
+
+const store = makeStore()
 
 if (process.env.NODE_ENV !== 'test') {
   store.subscribe(() => console.log(JSON.stringify(store.getState(), undefined, 2)))
 }
 
 export default store
+
+export type Store = typeof store

@@ -55,13 +55,13 @@ export interface PokerActionCall {
  * Entities
  */
 
-export const CardSymbol = ['heart', 'diamond', 'clover', 'spade'] as const
-export type CardSymbol = typeof CardSymbol[number]
+export const CardSymbol = ['spade', 'heart', 'diamond', 'clover'] as const
+export type CardSym = typeof CardSymbol[number]
 export type CardNum = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13
 
 export interface Card {
   num: CardNum
-  sym: CardSymbol
+  sym: CardSym
 }
 
 export interface Player {

@@ -1,23 +1,98 @@
-import { Card as ICard, CardNum, CardSymbol } from '@fastpoker/core'
+import { times, Card as ICard, CardNum, CardSym } from '@fastpoker/core'
+
+export const serializedCard = [
+  ...times(13, (i: any) => {
+    return {
+      sym: 'spade' as const,
+      num: i + 1,
+    }
+  }),
+  ...times(13, (i: any) => {
+    return {
+      sym: 'heart' as const,
+      num: i + 1,
+    }
+  }),
+  ...times(13, (i: any) => {
+    return {
+      sym: 'clover' as const,
+      num: i + 1,
+    }
+  }),
+  ...times(13, (i: any) => {
+    return {
+      sym: 'diamond' as const,
+      num: i + 1,
+    }
+  }),
+]
+
+const rankMap = new Map<CardNum, string>([
+  [1, 'A'],
+  [2, '2'],
+  [3, '3'],
+  [4, '4'],
+  [5, '5'],
+  [6, '6'],
+  [7, '7'],
+  [8, '8'],
+  [9, '9'],
+  [10, 'T'],
+  [11, 'J'],
+  [12, 'Q'],
+  [13, 'K'],
+])
+
+const suitMap = new Map<CardSym, string>([
+  ['diamond', 'd'],
+  ['heart', 'h'],
+  ['clover', 'c'],
+  ['spade', 's'],
+])
 
 export class Card implements ICard {
   num: CardNum
-  sym: CardSymbol
-  static cardSeed: ICard[] = []
+  sym: CardSym
+  private static fixedCardSeed: ICard[] = [] // For testing
+  private static cardSeed: ICard[] = []
 
-  static setCardSeed(cardSeed: ICard[]) {
-    Card.cardSeed = cardSeed
+  static setFixedCardSeed(cardSeed: ICard[]) {
+    Card.fixedCardSeed = cardSeed
   }
 
-  constructor() {
-    if (Card.cardSeed.length > 0) {
+  static randomizeSeed() {
+    if (Card.fixedCardSeed.length > 0) {
+      Card.cardSeed = Card.fixedCardSeed
+    } else {
+      Card.cardSeed = serializedCard.sort(() => Math.random() - Math.random())
+    }
+  }
+
+  constructor(givenNum?: CardNum, givenSym?: CardSym) {
+    if (givenNum && givenSym) {
+      this.num = givenNum
+      this.sym = givenSym
+    } else {
+      if (Card.cardSeed.length === 0) {
+        throw new Error('Card.cardSeed is empty. this is a bug')
+      }
       const { num, sym } = Card.cardSeed.shift()!
       this.num = num
       this.sym = sym
-    } else {
-      this.num = (Math.floor((Math.random() * 100) % 13) + 1) as CardNum
-      this.sym = CardSymbol[Math.floor((Math.random() * 100) % 4)]
     }
+  }
+
+  getId() {
+    return `${this.num}/${this.sym}`
+  }
+
+  toSolverValue() {
+    const r = rankMap.get(this.num)
+    const s = suitMap.get(this.sym)
+    if (!r || !s) {
+      throw new Error('rank or suit not found. this is a bug')
+    }
+    return `${r}${s}`
   }
 
   serialize() {

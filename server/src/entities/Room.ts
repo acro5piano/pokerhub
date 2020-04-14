@@ -1,7 +1,25 @@
-import { Room as IRoom } from '@fastpoker/core'
+import { Room as IRoom, times } from '@fastpoker/core'
 import { Player } from './Player'
 import { Card } from './Card'
 import { Board } from './Board'
+
+const { Hand } = require('pokersolver')
+
+export function getWinners(communityCards: Card[], players: Player[]): Player[] {
+  const communityCardsSolverirzed = communityCards.map(card => card.toSolverValue())
+  const hands = players.map(player => {
+    return Hand.solve([
+      ...communityCardsSolverirzed,
+      ...player.hand.map(card => card.toSolverValue()),
+    ])
+  })
+  const winnersHands = Hand.winners(hands)
+  return players.filter(player => {
+    const hands = player.hand.map(c => c.toSolverValue())
+    const winnerHands = winnersHands[0].cards.map((card: any) => card.toString())
+    return hands.every(card => winnerHands.includes(card))
+  })
+}
 
 export class Room implements IRoom {
   id: string
@@ -33,6 +51,7 @@ export class Room implements IRoom {
   }
 
   startGame(dealer?: Player): void {
+    Card.randomizeSeed()
     this.players.forEach(player => {
       player.setHand()
       player.isActive = true
@@ -43,14 +62,17 @@ export class Room implements IRoom {
     const { bigBlind } = this.board
     this.board.pot = bigBlind * 1.5
 
-    const smallBlindPlayer = this.getSmallBlind()
-    smallBlindPlayer.bet(bigBlind / 2)
-
-    const bigBlindPlayer = this.getBigBlind()
-    bigBlindPlayer.bet(bigBlind)
-
-    const underTheGun = this.getAdjacentPlayer(bigBlindPlayer, 1)
-    this.board.turnPlayerId = underTheGun.id
+    if (this.players.length === 2) {
+      this.getDealer().bet(bigBlind / 2)
+      this.getSmallBlind().bet(bigBlind)
+      this.board.turnPlayerId = this.getDealer().id
+    } else {
+      this.getSmallBlind().bet(bigBlind / 2)
+      const bigBlindPlayer = this.getBigBlind()
+      bigBlindPlayer.bet(bigBlind)
+      const underTheGun = this.getAdjacentPlayer(bigBlindPlayer, 1)
+      this.board.turnPlayerId = underTheGun.id
+    }
     this.isGameStarted = true
   }
 
@@ -83,47 +105,74 @@ export class Room implements IRoom {
   }
 
   private proceedToNextTurn() {
-    if (this.shouldRevealCard()) {
-      this.players.forEach(player => {
-        player.betting = 0
-        player.checed = false
-      })
-      this.board.turnPlayerId = this.getNextTurnPlayer(this.getDealer()).id
-      if (this.board.cards.length === 0) {
-        this.board.cards = [new Card(), new Card(), new Card()]
-      } else if (this.board.cards.length < 5) {
-        this.board.cards.push(new Card())
-      } else {
-        this.board.cards = []
-        const winners = this.players.slice(0, 1) // TODO
-        winners.forEach(winner => {
-          winner.stack += this.board.pot / winners.length
+    switch (this.getBoardState()) {
+      case 'revealNextCard': {
+        this.players.forEach(player => {
+          player.betting = 0
+          player.checed = false
         })
-        this.startGame(this.getSmallBlind())
-        // this.players.forEach(player => {
-        //   player.setHand()
-        //   player.isActive = true
-        // })
-        // this.board.dealerPlayerId = this.getSmallBlind().id
-        // this.board.turnPlayerId = this.getNextTurnPlayer(this.getSmallBlind()).id
-        // this.board.pot = 0
+        this.board.turnPlayerId = this.getNextTurnPlayer(this.getDealer()).id
+        if (this.board.cards.length === 0) {
+          times(3, () => this.board.openCard())
+        } else if (this.board.cards.length < 5) {
+          this.board.openCard()
+        } else {
+          this.board.cards = []
+          const winners = getWinners(this.board.cards, this.players)
+          winners.forEach(winner => {
+            winner.stack += this.board.pot / winners.length
+          })
+          this.startGame(this.getSmallBlind())
+        }
+        return
       }
-    } else {
-      this.board.turnPlayerId = this.getNextTurnPlayer().id
+      case 'folded': {
+        this.players.forEach(player => {
+          player.betting = 0
+          player.checed = false
+        })
+        this.board.turnPlayerId = this.getNextTurnPlayer(this.getDealer()).id
+        this.board.cards = []
+        const winners = this.players.filter(p => p.isActive)
+        const winner = winners[0]
+        if (!winner) {
+          throw new Error('there is no winner, this is a bug')
+        }
+        if (winners.length > 1) {
+          throw new Error('there are more than two winner, but state is "folded". this is a bug')
+        }
+        winner.stack += this.board.pot
+        this.startGame(this.getSmallBlind())
+        return
+      }
+      case 'nextPlayer': {
+        this.board.turnPlayerId = this.getNextTurnPlayer().id
+        return
+      }
     }
   }
 
-  private shouldRevealCard() {
+  private getBoardState(): 'revealNextCard' | 'folded' | 'nextPlayer' {
     const maxBetAmount = this.getCurrentMaximumBet()
+    const activePlayers = this.players.filter(player => player.isActive)
 
-    return (
-      (maxBetAmount > 0 &&
-        this.players
-          .filter(player => player.isActive)
-          .every(player => player.betting === maxBetAmount)) ||
+    if (activePlayers.length === 1) {
+      return 'folded'
+    }
+
+    if (this.board.cards.length === 0 && this.board.turnPlayerId === this.board.dealerPlayerId) {
+      return 'nextPlayer'
+    }
+
+    if (
+      (maxBetAmount > 0 && activePlayers.every(player => player.betting === maxBetAmount)) ||
       (maxBetAmount === 0 &&
         this.players.filter(player => player.isActive).every(player => player.checed))
-    )
+    ) {
+      return 'revealNextCard'
+    }
+
+    return 'nextPlayer'
   }
 
   private getDealer(): Player {

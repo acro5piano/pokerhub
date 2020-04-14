@@ -1,26 +1,13 @@
 import test from 'ava'
 import { times, Room } from '@fastpoker/core'
-import store from './store'
-import { Card } from './entities'
+import store from '../src/store'
+import { Card, serializedCard } from '../src/entities'
 
 test.beforeEach(() => {
-  Card.setCardSeed([
-    ...times(13, (i: any) => {
-      return {
-        sym: 'spade' as const,
-        num: i + 1,
-      }
-    }),
-    ...times(13, (i: any) => {
-      return {
-        sym: 'heart' as const,
-        num: i + 1,
-      }
-    }),
-  ])
+  Card.setFixedCardSeed(serializedCard)
 })
 
-test('GAME', t => {
+test('Three player basic test', t => {
   const roomId = 'foo'
 
   const assertState = (s: any) => {
@@ -34,7 +21,6 @@ test('GAME', t => {
         roomId,
       },
     })
-    return 1
   })
 
   assertState([

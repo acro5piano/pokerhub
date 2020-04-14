@@ -1,2 +1,3 @@
-export { Room } from './Room'
-export { Card } from './Card'
+export { Room, getWinners } from './Room'
+export { Card, serializedCard } from './Card'
+export { Player } from './Player'
