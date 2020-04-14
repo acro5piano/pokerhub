@@ -8,6 +8,7 @@ export class Board implements IBoard {
   dealerPlayerId = ''
   bigBlind = 100
   anti = 0
+  showDown = false
 
   openCard() {
     this.cards.push(new Card())

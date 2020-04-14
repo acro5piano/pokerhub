@@ -10,6 +10,7 @@ export type PokerAction =
   | PokerActionFold
   | PokerActionCheck
   | PokerActionCall
+  | PokerActionEndShowDown
 
 export type PokerActionPayload<T> = T & {
   roomId: string
@@ -51,6 +52,11 @@ export interface PokerActionCall {
   payload: PokerActionPayload<{}>
 }
 
+export interface PokerActionEndShowDown {
+  type: 'END_SHOW_DOWN'
+  payload: PokerActionPayload<{}>
+}
+
 /*
  * Entities
  */
@@ -81,6 +87,7 @@ export interface Board {
   dealerPlayerId: string
   bigBlind: number
   anti: number
+  showDown: boolean
 }
 
 export interface Room {

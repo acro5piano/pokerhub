@@ -34,10 +34,10 @@ interface PlayersProps {
   board: Board
   players: Player[]
   userPosition: number
-  showDown?: boolean
+  showDown: boolean
 }
 
-export function Players({ board, showDown = false, players, userPosition }: PlayersProps) {
+export function Players({ board, showDown, players, userPosition }: PlayersProps) {
   return (
     <Container>
       {players.map(player => (

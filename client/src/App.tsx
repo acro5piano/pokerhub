@@ -24,6 +24,19 @@ export function App() {
     }
   }, [])
 
+  React.useEffect(() => {
+    if (room?.board.showDown) {
+      setTimeout(() => {
+        dispatch?.({
+          type: 'END_SHOW_DOWN',
+          payload: {
+            roomId,
+          },
+        })
+      }, 3000)
+    }
+  }, [room?.board.showDown])
+
   if (!dispatch || !room || !roomId || !userId) {
     return <ActivityIndicator />
   }
@@ -95,7 +108,12 @@ export function App() {
 
   return (
     <AppContainer>
-      <Players players={otherPlayers} board={room.board} userPosition={me.position} />
+      <Players
+        showDown={room.board.showDown}
+        players={otherPlayers}
+        board={room.board}
+        userPosition={me.position}
+      />
       <Board board={room.board} bettingAmountSum={bettingAmountSum} />
       <View>
         <MyHand me={me} isDealer={room.board.dealerPlayerId === me.id} />

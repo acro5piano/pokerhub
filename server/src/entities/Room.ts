@@ -8,17 +8,15 @@ const { Hand } = require('pokersolver')
 export function getWinners(communityCards: Card[], players: Player[]): Player[] {
   const communityCardsSolverirzed = communityCards.map(card => card.toSolverValue())
   const hands = players.map(player => {
-    return Hand.solve([
+    const hand = Hand.solve([
       ...communityCardsSolverirzed,
       ...player.hand.map(card => card.toSolverValue()),
     ])
+    hand.__ID = player.id
+    return hand
   })
-  const winnersHands = Hand.winners(hands)
-  return players.filter(player => {
-    const hands = player.hand.map(c => c.toSolverValue())
-    const winnerHands = winnersHands[0].cards.map((card: any) => card.toString())
-    return hands.every(card => winnerHands.includes(card))
-  })
+  const winnersIDs = Hand.winners(hands).map((hand: any) => hand.__ID)
+  return players.filter(player => winnersIDs.includes(player.id))
 }
 
 export class Room implements IRoom {
@@ -58,6 +56,8 @@ export class Room implements IRoom {
       player.checed = false
     })
     this.board.dealerPlayerId = (dealer || this.players[0]).id
+    this.board.showDown = false
+    this.board.cards = []
 
     const { bigBlind } = this.board
     this.board.pot = bigBlind * 1.5
@@ -104,6 +104,17 @@ export class Room implements IRoom {
     this.proceedToNextTurn()
   }
 
+  calculateShowDownResult() {
+    const winners = getWinners(
+      this.board.cards,
+      this.players.filter(p => p.isActive),
+    )
+    winners.forEach(winner => {
+      winner.stack += this.board.pot / winners.length
+    })
+    this.startGame(this.getSmallBlind())
+  }
+
   private proceedToNextTurn() {
     switch (this.getBoardState()) {
       case 'revealNextCard': {
@@ -117,12 +128,10 @@ export class Room implements IRoom {
         } else if (this.board.cards.length < 5) {
           this.board.openCard()
         } else {
-          this.board.cards = []
-          const winners = getWinners(this.board.cards, this.players)
-          winners.forEach(winner => {
-            winner.stack += this.board.pot / winners.length
-          })
-          this.startGame(this.getSmallBlind())
+          if (this.board.showDown) {
+            throw new Error('already show down!')
+          }
+          this.board.showDown = true // SHOW DOWN!!
         }
         return
       }

@@ -34,6 +34,7 @@ test('Three player basic test', t => {
         turnPlayerId: '',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
       },
       players: [],
     },
@@ -64,6 +65,7 @@ test('Three player basic test', t => {
         turnPlayerId: '',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
       },
       players: [
         {
@@ -115,6 +117,7 @@ test('Three player basic test', t => {
         cards: [],
         pot: 150,
         turnPlayerId: 'player1',
+        showDown: false,
       },
       players: [
         {
@@ -173,6 +176,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [],
         pot: 450,
         turnPlayerId: 'player2',
@@ -234,6 +238,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [],
         pot: 450,
         turnPlayerId: 'player3',
@@ -295,6 +300,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [
           { num: 7, sym: 'spade' },
           { num: 8, sym: 'spade' },
@@ -362,6 +368,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [
           { num: 7, sym: 'spade' },
           { num: 8, sym: 'spade' },
@@ -427,6 +434,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [
           { num: 7, sym: 'spade' },
           { num: 8, sym: 'spade' },
@@ -495,6 +503,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [
           { num: 7, sym: 'spade' },
           { num: 8, sym: 'spade' },
@@ -562,6 +571,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [
           { num: 7, sym: 'spade' },
           { num: 8, sym: 'spade' },
@@ -628,6 +638,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [
           { num: 7, sym: 'spade' },
           { num: 8, sym: 'spade' },
@@ -695,6 +706,15 @@ test('Three player basic test', t => {
     },
   })
 
+  t.is(store.getState().findRoom(roomId).board.showDown, true)
+
+  store.dispatch({
+    type: 'END_SHOW_DOWN',
+    payload: {
+      roomId,
+    },
+  })
+
   assertState([
     {
       id: roomId,
@@ -703,6 +723,7 @@ test('Three player basic test', t => {
         dealerPlayerId: 'player2',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [],
         pot: 150,
         turnPlayerId: 'player2',
@@ -710,7 +731,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 2350,
+          stack: 1425,
           betting: 100,
           hand: [
             { num: 12, sym: 'spade' },
@@ -734,7 +755,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 550,
+          stack: 1475,
           betting: 50,
           hand: [
             { num: 3, sym: 'heart' },

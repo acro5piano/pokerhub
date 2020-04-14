@@ -7,7 +7,7 @@ function makePlayer(id: string, hand: Card[]) {
   return player
 }
 
-test('getWinners', t => {
+test('flush', t => {
   // prettier-ignore
   const communityCards = [
     new Card(1, 'spade'),
@@ -32,4 +32,30 @@ test('getWinners', t => {
   const winners = getWinners(communityCards, [player1, player2])
   t.is(winners.length, 1)
   t.is(winners[0].id, 'player1')
+})
+
+test('getWinners', t => {
+  // prettier-ignore
+  const communityCards = [
+    new Card ( 7, 'spade' ),
+    new Card ( 8, 'spade' ),
+    new Card ( 9, 'spade' ),
+    new Card ( 10, 'spade'),
+    new Card ( 11, 'spade'),
+  ]
+
+  // prettier-ignore
+  const player1 = makePlayer('player1', [
+    new Card(1, 'spade'),
+    new Card(2, 'spade'),
+  ])
+
+  // prettier-ignore
+  const player2 = makePlayer('player2', [
+    new Card(5, 'spade'),
+    new Card(6, 'spade'),
+  ])
+
+  const winners = getWinners(communityCards, [player1, player2])
+  t.is(winners.length, 2)
 })

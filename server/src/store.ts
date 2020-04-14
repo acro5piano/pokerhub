@@ -45,6 +45,16 @@ function reducer(repository: Repository = new Repository(), action: PokerAction)
       room.onCurrentPlayerFold()
       return repository
     }
+
+    case 'END_SHOW_DOWN': {
+      // When showDown, all players will send 'END_SHOW_DOWN' request
+      // so guard here
+      if (!room.board.showDown) {
+        return repository
+      }
+      room.calculateShowDownResult()
+      return repository
+    }
   }
   return repository
 }

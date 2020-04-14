@@ -10,10 +10,11 @@ An instant poker app: just share url to play with friends
 - [x] The logic of fold
 - [x] Support for 2 players initial position
 - [x] Decrease card logic (pop)
+- [x] Showdown
+- [ ] Build stylish UI -> in progress
 - [ ] Maximum bet
 - [ ] Player Died
 - [ ] Add various case tests
-- [ ] Build stylish UI
 
 # Deploy
 

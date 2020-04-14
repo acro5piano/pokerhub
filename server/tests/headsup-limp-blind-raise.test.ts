@@ -64,6 +64,7 @@ test('Headsup test - limping dealer, aggressive blind', t => {
         dealerPlayerId: 'player1',
         bigBlind: 100,
         anti: 0,
+        showDown: false,
         cards: [],
         pot: 500,
         turnPlayerId: 'player1',
