@@ -1,7 +1,7 @@
 import React from 'react'
 import { View } from 'react-native'
 import { Card } from '@fastpoker/core'
-import { PlayingCard } from './PlayingCard'
+import { PlayingCard } from '../atoms/PlayingCard'
 
 interface HandProps {
   cards: Card[]

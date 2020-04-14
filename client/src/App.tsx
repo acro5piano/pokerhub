@@ -1,11 +1,19 @@
 import React from 'react'
-import { ActivityIndicator, Text, View } from 'react-native'
+import styled from 'styled-components/native'
+import { ActivityIndicator, View } from 'react-native'
 import { getRandomString } from '@fastpoker/core'
 import { useRoomDispatch } from './hooks'
-import { Button } from './components/Button'
-import { Hand } from './components/Hand'
-import { BetWindow } from './components/BetWindow'
-import { PlayingCard } from './components/PlayingCard'
+import { Button } from './components/atoms/Button'
+import { ActionWindow } from './components/organisms/ActionWindow'
+import { MyHand } from './components/organisms/MyHand'
+import { Board } from './components/organisms/Board'
+import { Players } from './components/organisms/Players'
+
+const AppContainer = styled.View`
+  padding: 16px;
+  height: 100%;
+  justify-content: space-between;
+`
 
 export function App() {
   const { room, roomId, userId, dispatch } = useRoomDispatch()
@@ -71,9 +79,9 @@ export function App() {
 
   if (!room.isGameStarted || !me) {
     return (
-      <View>
+      <AppContainer>
         <Button onPress={start}>Start</Button>
-      </View>
+      </AppContainer>
     )
   }
 
@@ -82,56 +90,25 @@ export function App() {
     return Math.max(...bets)
   }
 
+  const otherPlayers = room.players.filter(p => p.id !== userId)
+
   return (
-    <View>
-      <Text>{room.board.pot}</Text>
-      <View style={{ flexDirection: 'row' }}>
-        {room.board.cards.map((card, i) => (
-          <View key={i}>
-            <PlayingCard card={card} />
-          </View>
-        ))}
+    <AppContainer>
+      <Players players={otherPlayers} board={room.board} userPosition={me.position} />
+      <Board board={room.board} />
+      <View>
+        <MyHand me={me} />
+        {isMyTurn && (
+          <ActionWindow
+            onBet={bet}
+            onCall={call}
+            onCheck={check}
+            onFold={fold}
+            isRaised={getCurrentMaximumBet() > 0 && getCurrentMaximumBet() > me.betting}
+            maximumBetting={getCurrentMaximumBet()}
+          />
+        )}
       </View>
-      <View style={{ flexDirection: 'row' }}>
-        <Text style={{ width: 100 }}></Text>
-        <Text style={{ width: 100 }}>Name</Text>
-        <Text style={{ width: 100 }}>Dealer</Text>
-        <Text style={{ width: 100 }}>Betting</Text>
-        <Text style={{ width: 100 }}>Stack</Text>
-      </View>
-      {room.players.map(player => (
-        <View
-          key={player.id}
-          style={{
-            flexDirection: 'row',
-          }}
-        >
-          <View style={{ width: 100 }}>
-            {room.board.turnPlayerId === player.id && <ActivityIndicator />}
-          </View>
-          <Text style={{ width: 100 }}>
-            {player.id}
-            {player.id === userId && '(You)'}
-          </Text>
-          <View style={{ width: 100 }}>
-            {room.board.dealerPlayerId === player.id && <Text>●</Text>}
-          </View>
-          <Text style={{ width: 100 }}>{player.betting}</Text>
-          <Text style={{ width: 100 }}>{player.stack}</Text>
-        </View>
-      ))}
-      <Hand cards={me.hand} />
-      {isMyTurn && (
-        <View>
-          <BetWindow onBet={bet} />
-          {getCurrentMaximumBet() > 0 && getCurrentMaximumBet() > me.betting ? (
-            <Button onPress={call}>CALL</Button>
-          ) : (
-            <Button onPress={check}>Check</Button>
-          )}
-          <Button onPress={fold}>FOLD</Button>
-        </View>
-      )}
-    </View>
+    </AppContainer>
   )
 }
