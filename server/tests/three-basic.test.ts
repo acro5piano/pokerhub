@@ -1,10 +1,10 @@
 import test from 'ava'
 import { times, Room } from '@fastpoker/core'
 import store from '../src/store'
-import { Card, serializedCard } from '../src/entities'
+import { Card, getSerializedCard } from '../src/entities'
 
 test.beforeEach(() => {
-  Card.setFixedCardSeed(serializedCard)
+  Card.setFixedCardSeed(getSerializedCard())
 })
 
 test('Three player basic test', t => {

@@ -1,3 +1,3 @@
 export { Room, getWinners } from './Room'
-export { Card, serializedCard } from './Card'
+export { Card, getSerializedCard } from './Card'
 export { Player } from './Player'

@@ -1,6 +1,6 @@
 import { times, Card as ICard, CardNum, CardSym } from '@fastpoker/core'
 
-export const serializedCard = [
+export const getSerializedCard = () => [
   ...times(13, (i: any) => {
     return {
       sym: 'spade' as const,
@@ -64,7 +64,7 @@ export class Card implements ICard {
     if (Card.fixedCardSeed.length > 0) {
       Card.cardSeed = Card.fixedCardSeed
     } else {
-      Card.cardSeed = serializedCard.sort(() => Math.random() - Math.random())
+      Card.cardSeed = getSerializedCard().sort(() => Math.random() - Math.random())
     }
   }
 

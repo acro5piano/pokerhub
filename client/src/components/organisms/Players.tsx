@@ -3,6 +3,7 @@ import { Board, Player } from '@fastpoker/core'
 import { Text } from 'react-native'
 import styled from 'styled-components/native'
 import { DealerButton } from '../atoms/DealerButton'
+import { Hand } from '../molecules/Hand'
 
 const Container = styled.View``
 
@@ -33,9 +34,10 @@ interface PlayersProps {
   board: Board
   players: Player[]
   userPosition: number
+  showDown?: boolean
 }
 
-export function Players({ board, players, userPosition }: PlayersProps) {
+export function Players({ board, showDown = false, players, userPosition }: PlayersProps) {
   return (
     <Container>
       {players.map(player => (
@@ -49,6 +51,7 @@ export function Players({ board, players, userPosition }: PlayersProps) {
             <Text>{player.stack}</Text>
           </AvatarLike>
           <Betting>{player.betting > 0 && <Text>{player.betting}</Text>}</Betting>
+          {showDown && <Hand cards={player.hand} />}
         </PlayerWrap>
       ))}
     </Container>
