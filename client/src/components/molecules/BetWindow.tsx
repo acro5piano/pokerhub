@@ -11,6 +11,7 @@ const Input = styled.TextInput`
   border: solid 1px #ccc;
   margin-right: 8px;
   border-radius: 3px;
+  color: #fff;
 `
 
 interface BetWindowProps {

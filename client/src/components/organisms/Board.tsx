@@ -3,13 +3,14 @@ import styled from 'styled-components/native'
 import { Dimensions, View } from 'react-native'
 import { Board } from '@fastpoker/core'
 import { PlayingCard } from '../atoms/PlayingCard'
+import { Typography } from '../atoms/Typography'
 
 const Container = styled.View`
   justify-content: center;
   align-items: center;
 `
 
-const Pot = styled.Text`
+const Pot = styled(Typography)`
   font-size: 24px;
   margin: 16px;
 `

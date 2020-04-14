@@ -8,11 +8,17 @@ import { ActionWindow } from './components/organisms/ActionWindow'
 import { MyHand } from './components/organisms/MyHand'
 import { Board } from './components/organisms/Board'
 import { Players } from './components/organisms/Players'
+import BackgroundImage from './assets/poker-background.jpg'
+import { GlobalStyle } from './GlobalStyle'
 
 const AppContainer = styled.View`
   padding: 16px;
   height: 100%;
   justify-content: space-between;
+  background-image: url(${BackgroundImage});
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 `
 
 export function App() {
@@ -38,7 +44,11 @@ export function App() {
   }, [room?.board.showDown])
 
   if (!dispatch || !room || !roomId || !userId) {
-    return <ActivityIndicator />
+    return (
+      <AppContainer>
+        <ActivityIndicator />
+      </AppContainer>
+    )
   }
 
   const start = () => {
@@ -93,6 +103,7 @@ export function App() {
   if (!room.isGameStarted || !me) {
     return (
       <AppContainer>
+        <GlobalStyle />
         <Button onPress={start}>Start</Button>
       </AppContainer>
     )
@@ -108,6 +119,7 @@ export function App() {
 
   return (
     <AppContainer>
+      <GlobalStyle />
       <Players
         showDown={room.board.showDown}
         players={otherPlayers}
@@ -116,7 +128,7 @@ export function App() {
       />
       <Board board={room.board} bettingAmountSum={bettingAmountSum} />
       <View>
-        <MyHand me={me} isDealer={room.board.dealerPlayerId === me.id} />
+        <MyHand me={me} isDealer={room.board.dealerPlayerId === me.id} isTurn={isMyTurn} />
         {isMyTurn && (
           <ActionWindow
             onBet={bet}

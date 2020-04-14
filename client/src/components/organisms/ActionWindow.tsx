@@ -7,6 +7,9 @@ const Container = styled.View`
   flex-direction: row;
   justify-content: flex-end;
   align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 `
 
 const Col = styled.View`

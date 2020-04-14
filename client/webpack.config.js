@@ -11,6 +11,7 @@ module.exports = {
   output: {
     filename: '[name].[chunkhash].js',
     path: path.resolve(__dirname, 'build'),
+    publicPath: '/',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.json'],
@@ -35,6 +36,17 @@ module.exports = {
             jsx: 'react',
           },
         },
+      },
+      {
+        test: /\.(png|jpg|gif|mp3|jpg|woff|woff2|eot|ttf|svg)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: isProduction ? '[name].[hash].[ext]' : '[name].[ext]',
+            },
+          },
+        ],
       },
     ],
   },
