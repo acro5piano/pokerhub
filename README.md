@@ -6,10 +6,10 @@ An instant poker app: just share url to play with friends
 
 # TODO
 
-- [ ] The logic of winner
-- [ ] The logic of fold
-- [ ] Support for 2 players initial position
-- [ ] Decrease card logic (pop)
+- [x] The logic of winner
+- [x] The logic of fold
+- [x] Support for 2 players initial position
+- [x] Decrease card logic (pop)
 - [ ] Maximum bet
 - [ ] Player Died
 - [ ] Add various case tests
