@@ -3,6 +3,24 @@ import { Player } from './Player'
 import { Card } from './Card'
 import { Board } from './Board'
 
+const { Hand } = require('pokersolver')
+
+export function getWinners(communityCards: Card[], players: Player[]): Player[] {
+  const communityCardsSolverirzed = communityCards.map(card => card.toSolverValue())
+  const hands = players.map(player => {
+    return Hand.solve([
+      ...communityCardsSolverirzed,
+      ...player.hand.map(card => card.toSolverValue()),
+    ])
+  })
+  const winnersHands = Hand.winners(hands)
+  return players.filter(player => {
+    const hands = player.hand.map(c => c.toSolverValue())
+    const winnerHands = winnersHands[0].cards.map((card: any) => card.toString())
+    return hands.every(card => winnerHands.includes(card))
+  })
+}
+
 export class Room implements IRoom {
   id: string
   players: Player[] = []
@@ -100,7 +118,7 @@ export class Room implements IRoom {
           this.board.openCard()
         } else {
           this.board.cards = []
-          const winners = this.players.slice(0, 1) // TODO
+          const winners = getWinners(this.board.cards, this.players)
           winners.forEach(winner => {
             winner.stack += this.board.pot / winners.length
           })
@@ -115,9 +133,13 @@ export class Room implements IRoom {
         })
         this.board.turnPlayerId = this.getNextTurnPlayer(this.getDealer()).id
         this.board.cards = []
-        const winner = this.players.find(p => p.isActive) // TODO
+        const winners = this.players.filter(p => p.isActive)
+        const winner = winners[0]
         if (!winner) {
           throw new Error('there is no winner, this is a bug')
+        }
+        if (winners.length > 1) {
+          throw new Error('there are more than two winner, but state is "folded". this is a bug')
         }
         winner.stack += this.board.pot
         this.startGame(this.getSmallBlind())
