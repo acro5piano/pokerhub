@@ -22,7 +22,7 @@ const AvatarLike = styled.View<{ isTurn: boolean }>`
   border-radius: 50%;
   justify-content: center;
   align-items: center;
-  border: solid ${p => (p.isTurn ? '2px red' : '1px #333')};
+  border: solid ${p => (p.isTurn ? '3px red' : '1px #333')};
 `
 
 const Betting = styled.View`

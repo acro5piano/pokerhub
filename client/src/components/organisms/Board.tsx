@@ -26,12 +26,13 @@ const CardsWrap = styled.View`
 
 interface BoardProps {
   board: Board
+  bettingAmountSum: number
 }
 
-export function Board({ board }: BoardProps) {
+export function Board({ board, bettingAmountSum }: BoardProps) {
   return (
     <Container>
-      <Pot>{board.pot}</Pot>
+      <Pot>{board.pot - bettingAmountSum}</Pot>
       <CardsWrap>
         {board.cards.map((card, i) => (
           <View key={i}>

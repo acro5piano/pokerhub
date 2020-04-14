@@ -160,7 +160,11 @@ export class Room implements IRoom {
       return 'folded'
     }
 
-    if (this.board.cards.length === 0 && this.board.turnPlayerId === this.board.dealerPlayerId) {
+    if (
+      this.board.cards.length === 0 &&
+      this.board.turnPlayerId === this.board.dealerPlayerId &&
+      maxBetAmount === this.board.bigBlind
+    ) {
       return 'nextPlayer'
     }
 

@@ -91,13 +91,14 @@ export function App() {
   }
 
   const otherPlayers = room.players.filter(p => p.id !== userId)
+  const bettingAmountSum = room.players.reduce((sum, p) => sum + p.betting, 0)
 
   return (
     <AppContainer>
       <Players players={otherPlayers} board={room.board} userPosition={me.position} />
-      <Board board={room.board} />
+      <Board board={room.board} bettingAmountSum={bettingAmountSum} />
       <View>
-        <MyHand me={me} />
+        <MyHand me={me} isDealer={room.board.dealerPlayerId === me.id} />
         {isMyTurn && (
           <ActionWindow
             onBet={bet}

@@ -8,7 +8,7 @@ test.beforeEach(() => {
 
 const roomId = 'foo'
 
-test('Headsup test - limping dealer', t => {
+test('Headsup test - limping dealer, aggressive blind', t => {
   const assertState = (s: any) => {
     t.deepEqual(s, store.getState().serialize())
   }
@@ -39,10 +39,20 @@ test('Headsup test - limping dealer', t => {
     },
   })
 
+  // Limping dealer
   store.dispatch({
     type: 'CALL',
     payload: {
       roomId,
+    },
+  })
+
+  // Aggressive Blind
+  store.dispatch({
+    type: 'BET',
+    payload: {
+      roomId,
+      amount: 300,
     },
   })
 
@@ -55,8 +65,8 @@ test('Headsup test - limping dealer', t => {
         bigBlind: 100,
         anti: 0,
         cards: [],
-        pot: 200,
-        turnPlayerId: 'player2',
+        pot: 500,
+        turnPlayerId: 'player1',
       },
       players: [
         {
@@ -73,8 +83,8 @@ test('Headsup test - limping dealer', t => {
         },
         {
           id: 'player2',
-          stack: 1400,
-          betting: 100,
+          stack: 1100,
+          betting: 400,
           hand: [
             { num: 3, sym: 'spade' },
             { num: 4, sym: 'spade' },
@@ -87,71 +97,15 @@ test('Headsup test - limping dealer', t => {
     },
   ])
 
-  // Player 2
+  // Limping dealer
   store.dispatch({
-    type: 'CHECK',
+    type: 'CALL',
     payload: {
       roomId,
     },
   })
 
-  // FLOP
-
-  // Player 2
-  store.dispatch({
-    type: 'BET',
-    payload: {
-      roomId,
-      amount: 300,
-    },
-  })
-
-  // Player 1
-  store.dispatch({
-    type: 'FOLD',
-    payload: {
-      roomId,
-    },
-  })
-
-  assertState([
-    {
-      id: 'foo',
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player2',
-        bigBlind: 100,
-        anti: 0,
-        cards: [],
-        pot: 150,
-        turnPlayerId: 'player2',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: 1300,
-          betting: 100,
-          hand: [
-            { num: 8, sym: 'spade' },
-            { num: 9, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: 1550,
-          betting: 50,
-          hand: [
-            { num: 10, sym: 'spade' },
-            { num: 11, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  // ...then, go to flop
+  t.is(store.getState().rooms[0].board.cards.length, 3)
+  t.is(store.getState().rooms[0].board.turnPlayerId, 'player2')
 })
