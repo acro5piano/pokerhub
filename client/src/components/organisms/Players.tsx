@@ -2,9 +2,9 @@ import * as React from 'react'
 import { Board, Player } from '@fastpoker/core'
 import styled from 'styled-components/native'
 import { DealerButton } from '../atoms/DealerButton'
+import { Dollar } from '../molecules/Dollar'
 import { Avatar } from '../atoms/Avatar'
 import { Hand } from '../molecules/Hand'
-import { Typography } from '../atoms/Typography'
 
 const Container = styled.View``
 
@@ -44,7 +44,7 @@ export function Players({ board, showDown, players, userPosition }: PlayersProps
             stack={player.stack}
             isFolded={!player.isActive}
           />
-          <Betting>{player.betting > 0 && <Typography>{player.betting}</Typography>}</Betting>
+          <Betting>{player.betting > 0 && <Dollar amount={player.betting} />}</Betting>
           {showDown && player.isActive && <Hand cards={player.hand} />}
         </PlayerWrap>
       ))}

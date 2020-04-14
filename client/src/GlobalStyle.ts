@@ -2,20 +2,30 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   body {
-    font-family: 'Roboto', 'ヒラギノ角ゴ Pro', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+    font-family: 'Forum', 'Roboto', 'ヒラギノ角ゴ Pro', 'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
   }
+  * {
+    font-family: 'Forum';
+  }
+
+  .playingCards .card .rank {
+    font-family: Forum !important;
+  }
+
+  .playingCards .card {
+    background: linear-gradient(45deg, rgba(139,136,181,1) 0%, rgba(231,231,236,1) 25%, rgba(255,255,255,1) 52%);
+  }
+
+  .playingCards .rank-j,
+  .playingCards .rank-q,
+  .playingCards .rank-k {
+    background: #fff;
+  }
+
   body,h1,h2,h3,h4,h5,h6,p,div {
     font-size: 14px;
     font-weight: normal;
     color: #fff;
-  }
-  * {
-    line-height: 1.67;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    -ms-box-sizing: border-box;
   }
   @font-face {
     font-family: 'Material Icons';

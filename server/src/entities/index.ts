@@ -1,3 +1,3 @@
 export { Room, getWinners } from './Room'
 export { Card, getSerializedCard } from './Card'
-export { Player } from './Player'
+export { Player, DEFALT_STACK } from './Player'

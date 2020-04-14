@@ -11,7 +11,8 @@ An instant poker app: just share url to play with friends
 - [x] Support for 2 players initial position
 - [x] Decrease card logic (pop)
 - [x] Showdown
-- [ ] Build stylish UI -> in progress
+- [x] Build stylish UI
+- [ ] Fix pre-flop limping bug
 - [ ] Maximum bet
 - [ ] Player Died
 - [ ] Add various case tests

@@ -1,9 +1,11 @@
 import { Player as IPlayer } from '@fastpoker/core'
 import { Card } from './Card'
 
+export const DEFALT_STACK = 1500
+
 export class Player implements IPlayer {
   id: string
-  stack = 1500
+  stack = DEFALT_STACK
   betting = 0
   hand: Card[] = []
   position: number

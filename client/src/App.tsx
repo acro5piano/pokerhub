@@ -17,7 +17,8 @@ const AppContainer = styled.View`
   justify-content: space-between;
   background-image: url(${BackgroundImage});
   background-repeat: no-repeat;
-  background-position: center;
+  background-position-x: center;
+  background-position-y: top;
   background-size: cover;
 `
 
