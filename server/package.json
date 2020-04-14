@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon -T src/index.ts",
-    "test": "ava",
+    "test": "ava --verbose",
+    "test:watch": "ava --watch --verbose",
     "start": "ts-node -T src/index.ts"
   },
   "dependencies": {

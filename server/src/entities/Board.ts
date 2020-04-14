@@ -9,6 +9,10 @@ export class Board implements IBoard {
   bigBlind = 100
   anti = 0
 
+  openCard() {
+    this.cards.push(new Card())
+  }
+
   serialize() {
     return {
       ...this,

@@ -1,2 +1,2 @@
 export { Room } from './Room'
-export { Card } from './Card'
+export { Card, serializedCard } from './Card'
