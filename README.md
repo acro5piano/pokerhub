@@ -5,6 +5,8 @@
 
 An instant poker app: just share url to play with your friends
 
+![image](https://user-images.githubusercontent.com/10719495/79309275-001b3a00-7f35-11ea-8b69-2bcc474165e5.jpg)
+
 # Stack
 
 **Overall**
@@ -16,6 +18,7 @@ An instant poker app: just share url to play with your friends
 **Frontend**
 
 - React
+- React Native Web
 - styled-components
 
 **Server**
