@@ -13,7 +13,7 @@ An instant poker app: just share url to play with friends
 - [x] Decrease card logic (pop)
 - [x] Showdown
 - [x] Build stylish UI
-- [ ] Fix pre-flop limping bug
+- [x] Fix pre-flop limping bug
 - [ ] Maximum bet
 - [ ] Player Died
 - [ ] Add various case tests
