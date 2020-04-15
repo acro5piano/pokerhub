@@ -3,7 +3,33 @@
 
 # fastpoker
 
-An instant poker app: just share url to play with friends
+An instant poker app: just share url to play with your friends
+
+# Stack
+
+**Overall**
+
+- TypeScript
+- Yarn workspaces
+- CircleCI
+
+**Frontend**
+
+- React
+- styled-components
+
+**Server**
+
+- Node.js
+- Redux
+- websockets/ws
+
+# Deploy & Production
+
+Currently using:
+
+- Netflify for SPA hosting
+- Heroku container registry
 
 # TODO
 
@@ -17,7 +43,3 @@ An instant poker app: just share url to play with friends
 - [ ] Maximum bet
 - [ ] Player Died
 - [ ] Add various case tests
-
-# Deploy
-
-Currently use Heroku container registry.
