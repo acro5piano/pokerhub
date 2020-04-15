@@ -10,6 +10,7 @@ export function initializeApp(): AppContext {
     location.href = location.href
     return null as any
   }
+  localStorage.setItem('userId', userId)
 
   const roomId = window.location.pathname.split('/')[1]
 
