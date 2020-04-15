@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components/native'
 import { ActivityIndicator, View } from 'react-native'
 import { getRandomString } from '@fastpoker/core'
 import { useRoomDispatch } from './hooks'
@@ -8,22 +7,14 @@ import { ActionWindow } from './components/organisms/ActionWindow'
 import { MyHand } from './components/organisms/MyHand'
 import { Board } from './components/organisms/Board'
 import { Players } from './components/organisms/Players'
-import BackgroundImage from './assets/poker-background.jpg'
+import { AppContainer } from './components/atoms/AppContainer'
 import { GlobalStyle } from './GlobalStyle'
+import { initializeApp } from './services/initializeApp'
 
-const AppContainer = styled.View`
-  padding: 16px;
-  height: 100%;
-  justify-content: space-between;
-  background-image: url(${BackgroundImage});
-  background-repeat: no-repeat;
-  background-position-x: center;
-  background-position-y: top;
-  background-size: cover;
-`
+const appContext = initializeApp()
 
 export function App() {
-  const { room, roomId, userId, dispatch } = useRoomDispatch()
+  const { room, roomId, userId, dispatch } = useRoomDispatch(appContext)
 
   React.useEffect(() => {
     if (!roomId) {
