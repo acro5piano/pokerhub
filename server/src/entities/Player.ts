@@ -1,7 +1,7 @@
 import { Player as IPlayer } from '@fastpoker/core'
 import { Card } from './Card'
 
-export const DEFALT_STACK = 1500
+export const DEFALT_STACK = 5000
 
 export class Player implements IPlayer {
   id: string

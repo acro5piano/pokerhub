@@ -1,7 +1,7 @@
 import test from 'ava'
 import { times, Room } from '@fastpoker/core'
 import store from '../src/store'
-import { Card, getSerializedCard } from '../src/entities'
+import { Card, getSerializedCard, DEFALT_STACK } from '../src/entities'
 
 test.beforeEach(() => {
   Card.setFixedCardSeed(getSerializedCard())
@@ -70,7 +70,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1500,
+          stack: DEFALT_STACK,
           betting: 0,
           hand: [],
           position: 0,
@@ -79,7 +79,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1500,
+          stack: DEFALT_STACK,
           betting: 0,
           hand: [],
           position: 1,
@@ -88,7 +88,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1500,
+          stack: DEFALT_STACK,
           betting: 0,
           hand: [],
           position: 2,
@@ -122,7 +122,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1500,
+          stack: DEFALT_STACK,
           betting: 0,
           hand: [
             { num: 1, sym: 'spade' },
@@ -134,7 +134,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 50,
           hand: [
             { num: 3, sym: 'spade' },
@@ -146,7 +146,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1400,
+          stack: DEFALT_STACK - 100,
           betting: 100,
           hand: [
             { num: 5, sym: 'spade' },
@@ -184,7 +184,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 300,
           hand: [
             { num: 1, sym: 'spade' },
@@ -196,7 +196,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 50,
           hand: [
             { num: 3, sym: 'spade' },
@@ -208,7 +208,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1400,
+          stack: DEFALT_STACK - 100,
           betting: 100,
           hand: [
             { num: 5, sym: 'spade' },
@@ -246,7 +246,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 300,
           hand: [
             { num: 1, sym: 'spade' },
@@ -258,7 +258,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 50,
           hand: [
             { num: 3, sym: 'spade' },
@@ -270,7 +270,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1400,
+          stack: DEFALT_STACK - 100,
           betting: 100,
           hand: [
             { num: 5, sym: 'spade' },
@@ -312,7 +312,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 1, sym: 'spade' },
@@ -324,7 +324,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 3, sym: 'spade' },
@@ -336,7 +336,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 5, sym: 'spade' },
@@ -380,7 +380,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 1, sym: 'spade' },
@@ -392,7 +392,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 3, sym: 'spade' },
@@ -404,7 +404,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 5, sym: 'spade' },
@@ -447,7 +447,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 1, sym: 'spade' },
@@ -459,7 +459,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 3, sym: 'spade' },
@@ -471,7 +471,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 5, sym: 'spade' },
@@ -516,7 +516,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1200,
+          stack: DEFALT_STACK - 300,
           betting: 0,
           hand: [
             { num: 1, sym: 'spade' },
@@ -528,7 +528,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 3, sym: 'spade' },
@@ -540,7 +540,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 900,
+          stack: DEFALT_STACK - 600,
           betting: 300,
           hand: [
             { num: 5, sym: 'spade' },
@@ -584,7 +584,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 600,
+          stack: DEFALT_STACK - 900,
           betting: 600,
           hand: [
             { num: 1, sym: 'spade' },
@@ -596,7 +596,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 3, sym: 'spade' },
@@ -608,7 +608,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 900,
+          stack: DEFALT_STACK - 600,
           betting: 300,
           hand: [
             { num: 5, sym: 'spade' },
@@ -652,7 +652,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 600,
+          stack: DEFALT_STACK - 900,
           betting: 0,
           hand: [
             { num: 1, sym: 'spade' },
@@ -664,7 +664,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 3, sym: 'spade' },
@@ -676,7 +676,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 600,
+          stack: DEFALT_STACK - 900,
           betting: 0,
           hand: [
             { num: 5, sym: 'spade' },
@@ -731,7 +731,7 @@ test('Three player basic test', t => {
       players: [
         {
           id: 'player1',
-          stack: 1425,
+          stack: DEFALT_STACK - 75,
           betting: 100,
           hand: [
             { num: 12, sym: 'spade' },
@@ -743,7 +743,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player2',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 0,
           hand: [
             { num: 1, sym: 'heart' },
@@ -755,7 +755,7 @@ test('Three player basic test', t => {
         },
         {
           id: 'player3',
-          stack: 1475,
+          stack: DEFALT_STACK - 25,
           betting: 50,
           hand: [
             { num: 3, sym: 'heart' },

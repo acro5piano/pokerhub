@@ -170,9 +170,10 @@ export class Room implements IRoom {
     }
 
     if (
+      maxBetAmount === this.board.bigBlind &&
       this.board.cards.length === 0 &&
-      this.board.turnPlayerId === this.board.dealerPlayerId &&
-      maxBetAmount === this.board.bigBlind
+      (this.board.turnPlayerId === this.board.dealerPlayerId ||
+        (activePlayers.length > 2 && this.board.turnPlayerId === this.getSmallBlind().id))
     ) {
       return 'nextPlayer'
     }

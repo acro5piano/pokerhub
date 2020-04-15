@@ -1,6 +1,6 @@
 import test from 'ava'
 import store from '../src/store'
-import { Card, getSerializedCard } from '../src/entities'
+import { Card, getSerializedCard, DEFALT_STACK } from '../src/entities'
 
 test.beforeEach(() => {
   Card.setFixedCardSeed(getSerializedCard())
@@ -55,7 +55,7 @@ test('Headsup test - aggressive dealer', t => {
       players: [
         {
           id: 'player1',
-          stack: 1450,
+          stack: DEFALT_STACK - 50,
           betting: 50,
           hand: [
             { num: 1, sym: 'spade' },
@@ -67,7 +67,7 @@ test('Headsup test - aggressive dealer', t => {
         },
         {
           id: 'player2',
-          stack: 1400,
+          stack: DEFALT_STACK - 100,
           betting: 100,
           hand: [
             { num: 3, sym: 'spade' },
@@ -105,7 +105,7 @@ test('Headsup test - aggressive dealer', t => {
       players: [
         {
           id: 'player1',
-          stack: 1150,
+          stack: DEFALT_STACK - 350,
           betting: 350,
           hand: [
             { num: 1, sym: 'spade' },
@@ -117,7 +117,7 @@ test('Headsup test - aggressive dealer', t => {
         },
         {
           id: 'player2',
-          stack: 1400,
+          stack: DEFALT_STACK - 100,
           betting: 100,
           hand: [
             { num: 3, sym: 'spade' },
@@ -155,7 +155,7 @@ test('Headsup test - aggressive dealer', t => {
       players: [
         {
           id: 'player1',
-          stack: 1500,
+          stack: DEFALT_STACK,
           betting: 100,
           hand: [
             { num: 5, sym: 'spade' },
@@ -167,7 +167,7 @@ test('Headsup test - aggressive dealer', t => {
         },
         {
           id: 'player2',
-          stack: 1350,
+          stack: DEFALT_STACK - 150,
           betting: 50,
           hand: [
             { num: 7, sym: 'spade' },
