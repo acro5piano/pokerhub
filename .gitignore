@@ -103,5 +103,6 @@ dist
 # TernJS port file
 .tern-port
 
-build/
-server/public/
+/build
+/client/build/*
+!/client/build/_redirects

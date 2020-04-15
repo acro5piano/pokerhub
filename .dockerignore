@@ -1,2 +1,7 @@
-node_modules
-Dockerfile
+**node_modules**
+*
+!server
+!core
+!package.json
+!yarn.lock
+!tsconfig.base.json

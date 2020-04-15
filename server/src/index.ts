@@ -1,31 +1,10 @@
 import WebSocket from 'ws'
 import { PokerAction } from '@fastpoker/core'
 import store from './store'
-import http from 'http'
-import fs from 'fs'
-import path from 'path'
 
-const server = http.createServer((req, res) => {
-  const basePath = path.join(__dirname, '../public')
-  fs.readFile(`${basePath}${req.url}`, (err, data) => {
-    res.writeHead(200)
-    if (err) {
-      fs.readFile(`${basePath}/index.html`, (err, data) => {
-        if (err) {
-          res.writeHead(404)
-          res.end(JSON.stringify(err))
-        } else {
-          res.end(data)
-        }
-      })
-      return
-    }
-    res.writeHead(200)
-    res.end(data)
-  })
-})
+const port = Number(process.env.PORT) || 30762
 
-const wss = new WebSocket.Server({ server })
+const wss = new WebSocket.Server({ port })
 
 function getRoom(ws: any): string {
   return ws.room
@@ -54,14 +33,4 @@ wss.on('connection', (ws, { url }) => {
   })
 })
 
-server.listen(process.env.PORT || 30762, () => {
-  console.log('> Listening to http://localhost:30762')
-})
-
-process.on('SIGTERM', () => {
-  console.info('SIGTERM signal received.\nClosing http server.')
-  wss.clients.forEach(client => client.close())
-  server.close(() => {
-    console.log('Http server closed.')
-  })
-})
+console.log(`> Listening to http://localhost:${port}`)

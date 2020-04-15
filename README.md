@@ -1,3 +1,4 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a26fd5c9-6123-475c-ba6c-1d6493c5eb66/deploy-status)](https://app.netlify.com/sites/fastpoker/deploys)
 [![CircleCI](https://circleci.com/gh/acro5piano/fastpoker.svg?style=svg)](https://circleci.com/gh/acro5piano/fastpoker)
 
 # fastpoker
