@@ -25,14 +25,8 @@ export class Board implements IBoard {
   }
 
   serialize() {
-    const { pot, turnPlayerId, dealerPlayerId, bigBlind, anti, showDown } = this
     return {
-      pot,
-      turnPlayerId,
-      dealerPlayerId,
-      bigBlind,
-      anti,
-      showDown,
+      ...this,
       cards: this.cards.map(c => c.serialize()),
     }
   }

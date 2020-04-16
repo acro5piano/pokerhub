@@ -10,6 +10,7 @@ export class Player implements IPlayer {
   hand: Card[] = []
   position: number
   isActive = true
+  isDead = false
   checed = false
 
   constructor(playerId: string, position: number) {
@@ -18,7 +19,7 @@ export class Player implements IPlayer {
   }
 
   canHasTurn() {
-    return this.isActive && this.hand.length > 0 && this.stack > 0
+    return this.isActive && this.hand.length > 0 && !this.isDead
   }
 
   setHand() {
@@ -26,6 +27,9 @@ export class Player implements IPlayer {
   }
 
   bet(amount: number): void {
+    if (this.isDead) {
+      return
+    }
     this.stack -= amount
     this.betting += amount
   }

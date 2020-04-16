@@ -23,7 +23,6 @@ export class Room implements IRoom {
   id: string
   players: Player[] = []
   board = new Board()
-
   isGameStarted = false
 
   constructor(roomId: string) {
@@ -31,7 +30,6 @@ export class Room implements IRoom {
   }
 
   serialize() {
-    this.board.cards[0]
     return {
       ...this,
       players: this.players.map(p => p.serialize()),
@@ -52,7 +50,11 @@ export class Room implements IRoom {
     Card.randomizeSeed()
     this.players.forEach(player => {
       player.setHand()
-      player.isActive = true
+      if (player.isDead) {
+        player.isActive = false
+      } else {
+        player.isActive = true
+      }
       player.checed = false
     })
     this.board.dealerPlayerId = (dealer || this.players[0]).id
@@ -106,10 +108,22 @@ export class Room implements IRoom {
 
   calculateShowDownResult() {
     const winners = getWinners(this.board.cards, this.getActivePlayers())
+    const losers = this.getActivePlayers().filter(
+      player => !Boolean(winners.find(w => w.id === player.id)),
+    )
     winners.forEach(winner => {
       winner.stack += this.board.pot / winners.length
     })
-    this.startGame(this.getSmallBlind())
+    losers.forEach(loser => {
+      if (loser.stack === 0) {
+        loser.isDead = true
+      }
+    })
+    if (this.getActivePlayers().length > 1) {
+      this.startGame(this.getSmallBlind())
+    } else {
+      this.board.pot = 0
+    }
   }
 
   private proceedToNextTurn() {
