@@ -26,6 +26,7 @@ An instant poker app: just share url to play with your friends
 - Node.js
 - Redux
 - websockets/ws
+- Ava (For testing)
 
 # Deploy & Production
 
