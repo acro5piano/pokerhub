@@ -66,7 +66,7 @@ interface AvatarProps {
   isFolded: boolean
 }
 
-export function Avatar({ isTurn, stack, isFolded }: AvatarProps) {
+export function Avatar({ isTurn, name, stack, isFolded }: AvatarProps) {
   return (
     <View>
       <OpacityWrapper isTurn={isTurn}>
