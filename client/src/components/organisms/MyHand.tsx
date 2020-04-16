@@ -27,7 +27,7 @@ export function MyHand({ me, isDealer, isTurn }: MyHandProps) {
     <Container>
       <Dollar amount={me.betting} />
       <Row>
-        <Avatar isTurn={isTurn} name={me.id} stack={me.stack} isFolded={!me.isActive} />
+        <Avatar isTurn={isTurn} player={me} />
         {isDealer && <DealerButton />}
       </Row>
       <HandWrap>

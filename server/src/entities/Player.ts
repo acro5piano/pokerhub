@@ -10,11 +10,17 @@ export class Player implements IPlayer {
   hand: Card[] = []
   position: number
   isActive = true
+  isDead = false
   checed = false
+  avatarImageUrl = `/${(Math.floor(Math.random() * 100) % 11) + 1}.jpg`
 
   constructor(playerId: string, position: number) {
     this.id = playerId
     this.position = position
+  }
+
+  canHasTurn() {
+    return this.isActive && this.hand.length > 0 && !this.isDead
   }
 
   setHand() {
@@ -22,6 +28,9 @@ export class Player implements IPlayer {
   }
 
   bet(amount: number): void {
+    if (this.isDead) {
+      return
+    }
     this.stack -= amount
     this.betting += amount
   }

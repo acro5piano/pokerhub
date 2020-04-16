@@ -1,6 +1,7 @@
 import styled from 'styled-components/native'
 import * as React from 'react'
 import { Text } from 'react-native'
+import ButtonImage from '~/assets/dealer-button.jpg'
 
 const Container = styled.View`
   padding: 4px;
@@ -21,7 +22,7 @@ const ButtonWrap = styled.View`
 `
 
 const Button = styled.View`
-  background-image: url('https://cdn4.vectorstock.com/i/1000x1000/74/33/spades-suit-flat-icon-vector-19617433.jpg');
+  background-image: url(${ButtonImage});
   background-size: cover;
   width: 16px;
   height: 16px;

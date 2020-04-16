@@ -77,7 +77,9 @@ export interface Player {
   hand: [Card, Card] | Card[]
   position: number
   isActive: boolean
+  isDead: boolean
   checed: boolean
+  avatarImageUrl: string
 }
 
 export interface Board {

@@ -1,5 +1,5 @@
 import test from 'ava'
-import { times, Room } from '@fastpoker/core'
+import { times } from '@fastpoker/core'
 import store from '../src/store'
 import { Card, getSerializedCard, DEFALT_STACK } from '../src/entities'
 
@@ -7,13 +7,9 @@ test.beforeEach(() => {
   Card.setFixedCardSeed(getSerializedCard())
 })
 
+const roomId = 'foo'
+
 test('Three player basic test', t => {
-  const roomId = 'foo'
-
-  const assertState = (s: any) => {
-    t.deepEqual(s, store.getState().serialize())
-  }
-
   times(5, () => {
     store.dispatch({
       type: 'CREATE_ROOM',
@@ -23,22 +19,14 @@ test('Three player basic test', t => {
     })
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: false,
-      board: {
-        cards: [],
-        pot: 0,
-        dealerPlayerId: '',
-        turnPlayerId: '',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-      },
-      players: [],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.pot, 0)
+  t.is(store.getState().findRoom(roomId).isGameStarted, false)
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, '')
+  t.is(store.getState().findRoom(roomId).board.dealerPlayerId, '')
+  t.is(store.getState().findRoom(roomId).board.bigBlind, 100)
+  t.is(store.getState().findRoom(roomId).board.showDown, false)
+  t.is(store.getState().findRoom(roomId).board.anti, 0)
+  t.deepEqual(store.getState().findRoom(roomId).players, [])
 
   const players = ['player1', 'player2', 'player3']
 
@@ -54,50 +42,12 @@ test('Three player basic test', t => {
     )
   })
 
-  assertState([
-    {
-      id: 'foo',
-      isGameStarted: false,
-      board: {
-        cards: [],
-        pot: 0,
-        dealerPlayerId: '',
-        turnPlayerId: '',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK,
-          betting: 0,
-          hand: [],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK,
-          betting: 0,
-          hand: [],
-          position: 1,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK,
-          betting: 0,
-          hand: [],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).players.length, 3)
+  players.forEach((playerId, i) => {
+    t.is(store.getState().findRoom(roomId).findOrCreatePlayer(playerId).stack, DEFALT_STACK)
+    t.is(store.getState().findRoom(roomId).findOrCreatePlayer(playerId).betting, 0)
+    t.is(store.getState().findRoom(roomId).findOrCreatePlayer(playerId).position, i)
+  })
 
   store.dispatch({
     type: 'START_GAME',
@@ -106,59 +56,19 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: 'foo',
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        cards: [],
-        pot: 150,
-        turnPlayerId: 'player1',
-        showDown: false,
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 50,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 100,
-          betting: 100,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ] as Room[])
+  t.is(store.getState().findRoom(roomId).isGameStarted, true)
+  t.is(store.getState().findRoom(roomId).board.dealerPlayerId, 'player1')
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player1')
+  players.forEach(playerId => {
+    t.is(store.getState().findRoom(roomId).findOrCreatePlayer(playerId).hand.length, 2)
+    t.is(
+      store.getState().findRoom(roomId).findOrCreatePlayer(playerId).hand[0].sym,
+      'spade' as const,
+    )
+  })
+  t.is(store.getState().findRoom(roomId).players[0].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[1].betting, 50)
+  t.is(store.getState().findRoom(roomId).players[2].betting, 100)
 
   store.dispatch({
     type: 'BET',
@@ -168,59 +78,9 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: 'foo',
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [],
-        pot: 450,
-        turnPlayerId: 'player2',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 300,
-          betting: 300,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 50,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 100,
-          betting: 100,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player2')
+  t.is(store.getState().findRoom(roomId).players[0].betting, 300)
+  t.is(store.getState().findRoom(roomId).players[0].stack, DEFALT_STACK - 300)
 
   // Player 2 fold
   store.dispatch({
@@ -230,59 +90,9 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: 'foo',
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [],
-        pot: 450,
-        turnPlayerId: 'player3',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 300,
-          betting: 300,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 50,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 100,
-          betting: 100,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player3')
+  t.is(store.getState().findRoom(roomId).players[1].betting, 50)
+  t.is(store.getState().findRoom(roomId).players[1].stack, DEFALT_STACK - 50)
 
   // Player 3 call
   store.dispatch({
@@ -292,63 +102,13 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: 'foo',
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [
-          { num: 7, sym: 'spade' },
-          { num: 8, sym: 'spade' },
-          { num: 9, sym: 'spade' },
-        ],
-        pot: 650,
-        turnPlayerId: 'player3', // In Flop, starting from smallBlind
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  // In Flop, starting from the smallBlind
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player3')
+  t.is(store.getState().findRoom(roomId).players[0].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[0].stack, DEFALT_STACK - 300)
+  t.is(store.getState().findRoom(roomId).players[2].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[2].stack, DEFALT_STACK - 300)
+  t.is(store.getState().findRoom(roomId).board.cards.length, 3)
 
   // FLOP
 
@@ -360,63 +120,9 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [
-          { num: 7, sym: 'spade' },
-          { num: 8, sym: 'spade' },
-          { num: 9, sym: 'spade' },
-        ],
-        pot: 650,
-        turnPlayerId: 'player1',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: true,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player1')
+  t.is(store.getState().findRoom(roomId).players[2].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[2].stack, DEFALT_STACK - 300)
 
   // player 1 also check.
   store.dispatch({
@@ -426,64 +132,10 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [
-          { num: 7, sym: 'spade' },
-          { num: 8, sym: 'spade' },
-          { num: 9, sym: 'spade' },
-          { num: 10, sym: 'spade' },
-        ],
-        pot: 650,
-        turnPlayerId: 'player3',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player3')
+  t.is(store.getState().findRoom(roomId).players[0].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[0].stack, DEFALT_STACK - 300)
+  t.is(store.getState().findRoom(roomId).board.cards.length, 4)
 
   // TURN
 
@@ -495,64 +147,10 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [
-          { num: 7, sym: 'spade' },
-          { num: 8, sym: 'spade' },
-          { num: 9, sym: 'spade' },
-          { num: 10, sym: 'spade' },
-        ],
-        pot: 950,
-        turnPlayerId: 'player1',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 300,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 600,
-          betting: 300,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player1')
+  t.is(store.getState().findRoom(roomId).board.pot, 950)
+  t.is(store.getState().findRoom(roomId).players[2].betting, 300)
+  t.is(store.getState().findRoom(roomId).players[2].stack, DEFALT_STACK - 600)
 
   // Player 1 Re-Raise
   store.dispatch({
@@ -563,64 +161,12 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [
-          { num: 7, sym: 'spade' },
-          { num: 8, sym: 'spade' },
-          { num: 9, sym: 'spade' },
-          { num: 10, sym: 'spade' },
-        ],
-        pot: 1550,
-        turnPlayerId: 'player3',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 900,
-          betting: 600,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 600,
-          betting: 300,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player3')
+  t.is(store.getState().findRoom(roomId).board.pot, 1550)
+  t.is(store.getState().findRoom(roomId).players[0].betting, 600)
+  t.is(store.getState().findRoom(roomId).players[0].stack, DEFALT_STACK - 300 - 600)
+  t.is(store.getState().findRoom(roomId).players[2].betting, 300)
+  t.is(store.getState().findRoom(roomId).players[2].stack, DEFALT_STACK - 600)
 
   // Player 3 Call to the Re-Raise
   store.dispatch({
@@ -630,65 +176,10 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player1',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [
-          { num: 7, sym: 'spade' },
-          { num: 8, sym: 'spade' },
-          { num: 9, sym: 'spade' },
-          { num: 10, sym: 'spade' },
-          { num: 11, sym: 'spade' },
-        ],
-        pot: 1850,
-        turnPlayerId: 'player3',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 900,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'spade' },
-            { num: 2, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 3, sym: 'spade' },
-            { num: 4, sym: 'spade' },
-          ],
-          position: 1,
-          isActive: false,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 900,
-          betting: 0,
-          hand: [
-            { num: 5, sym: 'spade' },
-            { num: 6, sym: 'spade' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player3')
+  t.is(store.getState().findRoom(roomId).board.pot, 1850)
+  t.is(store.getState().findRoom(roomId).players[2].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[2].stack, DEFALT_STACK - 900)
 
   // RIVER
 
@@ -715,57 +206,14 @@ test('Three player basic test', t => {
     },
   })
 
-  assertState([
-    {
-      id: roomId,
-      isGameStarted: true,
-      board: {
-        dealerPlayerId: 'player2',
-        bigBlind: 100,
-        anti: 0,
-        showDown: false,
-        cards: [],
-        pot: 150,
-        turnPlayerId: 'player2',
-      },
-      players: [
-        {
-          id: 'player1',
-          stack: DEFALT_STACK - 75,
-          betting: 100,
-          hand: [
-            { num: 12, sym: 'spade' },
-            { num: 13, sym: 'spade' },
-          ],
-          position: 0,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player2',
-          stack: DEFALT_STACK - 50,
-          betting: 0,
-          hand: [
-            { num: 1, sym: 'heart' },
-            { num: 2, sym: 'heart' },
-          ],
-          position: 1,
-          isActive: true,
-          checed: false,
-        },
-        {
-          id: 'player3',
-          stack: DEFALT_STACK - 25,
-          betting: 50,
-          hand: [
-            { num: 3, sym: 'heart' },
-            { num: 4, sym: 'heart' },
-          ],
-          position: 2,
-          isActive: true,
-          checed: false,
-        },
-      ],
-    },
-  ])
+  // The result is "chop". Proceed to the next game.
+  t.is(store.getState().findRoom(roomId).board.showDown, false)
+  t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player2')
+  t.is(store.getState().findRoom(roomId).board.pot, 150)
+  t.is(store.getState().findRoom(roomId).players[0].betting, 100)
+  t.is(store.getState().findRoom(roomId).players[0].stack, DEFALT_STACK + 25 - 100)
+  t.is(store.getState().findRoom(roomId).players[1].betting, 0)
+  t.is(store.getState().findRoom(roomId).players[1].stack, DEFALT_STACK - 50)
+  t.is(store.getState().findRoom(roomId).players[2].betting, 50)
+  t.is(store.getState().findRoom(roomId).players[2].stack, DEFALT_STACK + 25 - 50)
 })
