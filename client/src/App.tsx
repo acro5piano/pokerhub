@@ -127,6 +127,7 @@ export function App() {
             onCall={call}
             onCheck={check}
             onFold={fold}
+            stack={me.stack}
             isRaised={getCurrentMaximumBet() > 0 && getCurrentMaximumBet() > me.betting}
             maximumBetting={getCurrentMaximumBet()}
           />

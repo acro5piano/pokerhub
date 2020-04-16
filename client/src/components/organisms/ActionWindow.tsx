@@ -23,6 +23,7 @@ interface ActionWindowProps {
   onCheck: () => void
   isRaised: boolean
   maximumBetting: number
+  stack: number
 }
 
 export function ActionWindow({
@@ -32,6 +33,7 @@ export function ActionWindow({
   onCall,
   onFold,
   onCheck,
+  stack,
 }: ActionWindowProps) {
   return (
     <Container>
@@ -46,7 +48,7 @@ export function ActionWindow({
         )}
       </Col>
       <Col>
-        <BetWindow onBet={onBet} maximumBetting={maximumBetting} />
+        <BetWindow onBet={onBet} maximumBetting={maximumBetting} stack={stack} />
       </Col>
     </Container>
   )
