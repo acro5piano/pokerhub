@@ -73,6 +73,7 @@ export function Avatar({ isTurn, stack, isFolded }: AvatarProps) {
         <Container isFolded={isFolded}>
           <Fold isFolded={isFolded}>
             <StackWrap>
+              <Typography>{name}</Typography>
               <Typography>${stack.toLocaleString()}</Typography>
             </StackWrap>
           </Fold>
