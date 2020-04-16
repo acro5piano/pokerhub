@@ -3,6 +3,10 @@ import { Card } from './Card'
 
 export const DEFALT_STACK = 5000
 
+function getAvatarImageUrl() {
+  return `/avatars/${(Math.floor(Math.random() * 100) % 11) + 1}.jpg`
+}
+
 export class Player implements IPlayer {
   id: string
   stack = DEFALT_STACK
@@ -12,7 +16,7 @@ export class Player implements IPlayer {
   isActive = true
   isDead = false
   checed = false
-  avatarImageUrl = `/${(Math.floor(Math.random() * 100) % 11) + 1}.jpg`
+  avatarImageUrl = getAvatarImageUrl()
 
   constructor(playerId: string, position: number) {
     this.id = playerId

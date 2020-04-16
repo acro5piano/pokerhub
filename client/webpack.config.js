@@ -24,7 +24,7 @@ module.exports = {
     port,
     host: '0.0.0.0',
     historyApiFallback: true,
-    contentBase: path.resolve(__dirname, 'src/assets/avatars'),
+    contentBase: path.resolve(__dirname, 'public'),
   },
   module: {
     rules: [
@@ -55,6 +55,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: './index.html',
+      minify: true,
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),

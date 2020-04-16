@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server",
-    "build": "NODE_ENV=production webpack && cp src/assets/avatars/* build/"
+    "build": "NODE_ENV=production webpack && cp -r public/* build/"
   },
   "dependencies": {
     "@types/react": "^16.9.34",

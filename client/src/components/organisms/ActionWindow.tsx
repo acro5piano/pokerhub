@@ -44,7 +44,7 @@ export function ActionWindow({
         {isRaised ? (
           <Button onPress={onCall}>CALL</Button>
         ) : (
-          <Button onPress={onCheck}>Check</Button>
+          <Button onPress={onCheck}>CHECK</Button>
         )}
       </Col>
       <Col>
