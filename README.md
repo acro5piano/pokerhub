@@ -44,6 +44,6 @@ Currently using:
 - [x] Showdown
 - [x] Build stylish UI
 - [x] Fix pre-flop limping bug
-- [ ] Maximum bet
-- [ ] Player Died
-- [ ] Add various case tests
+- [x] Add various case tests
+- [x] Maximum bet
+- [x] Player Died
