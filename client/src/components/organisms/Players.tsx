@@ -15,11 +15,10 @@ const PlayerWrap = styled.View<{ relativePosition: number }>`
   right: ${p => (p.relativePosition < 0 ? 0 : 'unset')};
   left: ${p => (p.relativePosition > 0 ? 0 : 'unset')};
   top: ${p => Math.abs(p.relativePosition) * 100}px;
-  margin-top: 24px;
 `
 
 const Betting = styled.View`
-  margin-left: 16px;
+  margin: 0 16px;
 `
 
 interface PlayersProps {
@@ -38,12 +37,9 @@ export function Players({ board, showDown, players, userPosition }: PlayersProps
           relativePosition={(player.position - userPosition) % players.length}
         >
           {board.dealerPlayerId === player.id && <DealerButton />}
-          <Avatar
-            isTurn={board.turnPlayerId === player.id}
-            name={player.id}
-            stack={player.stack}
-            isFolded={!player.isActive}
-          />
+          <Avatar isTurn={board.turnPlayerId === player.id} player={player} />
+          {/* <div>position: {player.position} , </div> */}
+          {/* <div>relativePosition: {(player.position - userPosition) % players.length}</div> */}
           <Betting>{player.betting > 0 && <Dollar amount={player.betting} />}</Betting>
           {showDown && player.isActive && <Hand cards={player.hand} />}
         </PlayerWrap>

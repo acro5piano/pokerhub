@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Player } from '@fastpoker/core'
 import { View } from 'react-native'
 import styled from 'styled-components/native'
 import webStyled from 'styled-components'
@@ -39,7 +40,7 @@ const Container = styled.View<{ isFolded: boolean }>`
   transform: scale(${p => (p.isFolded ? 0.8 : 1)});
 `
 
-const Fold = styled.View<{ isFolded: boolean }>`
+const Mask = styled.View<{ isFolded: boolean }>`
   ${p =>
     p.isFolded &&
     css`
@@ -57,26 +58,26 @@ const StackWrap = styled.View`
   background: rgba(0, 0, 0, 0.6);
   padding: 2px 6px;
   border-radius: 4px;
+  align-items: center;
 `
 
 interface AvatarProps {
-  name: string
-  stack: number
+  player: Player
   isTurn: boolean
-  isFolded: boolean
 }
 
-export function Avatar({ isTurn, name, stack, isFolded }: AvatarProps) {
+export function Avatar({ isTurn, player }: AvatarProps) {
+  const isFolded = !player.isActive || player.hand.length === 0
   return (
     <View>
       <OpacityWrapper isTurn={isTurn}>
         <Container isFolded={isFolded}>
-          <Fold isFolded={isFolded}>
+          <Mask isFolded={isFolded}>
             <StackWrap>
-              <Typography>{name}</Typography>
-              <Typography>${stack.toLocaleString()}</Typography>
+              <Typography>{player.id}</Typography>
+              <Typography>${player.stack.toLocaleString()}</Typography>
             </StackWrap>
-          </Fold>
+          </Mask>
         </Container>
       </OpacityWrapper>
     </View>

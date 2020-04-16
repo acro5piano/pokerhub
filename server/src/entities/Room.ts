@@ -105,10 +105,7 @@ export class Room implements IRoom {
   }
 
   calculateShowDownResult() {
-    const winners = getWinners(
-      this.board.cards,
-      this.players.filter(p => p.isActive),
-    )
+    const winners = getWinners(this.board.cards, this.getActivePlayers())
     winners.forEach(winner => {
       winner.stack += this.board.pot / winners.length
     })
@@ -142,7 +139,7 @@ export class Room implements IRoom {
         })
         this.board.turnPlayerId = this.getNextTurnPlayer(this.getDealer()).id
         this.board.cards = []
-        const winners = this.players.filter(p => p.isActive)
+        const winners = this.getActivePlayers()
         const winner = winners[0]
         if (!winner) {
           throw new Error('there is no winner, this is a bug')
@@ -161,11 +158,14 @@ export class Room implements IRoom {
     }
   }
 
+  private getActivePlayers() {
+    return this.players.filter(player => player.canHasTurn())
+  }
+
   private getBoardState(): 'revealNextCard' | 'folded' | 'nextPlayer' {
     const maxBetAmount = this.getCurrentMaximumBet()
-    const activePlayers = this.players.filter(player => player.isActive)
 
-    if (activePlayers.length === 1) {
+    if (this.getActivePlayers().length === 1) {
       return 'folded'
     }
 
@@ -173,15 +173,15 @@ export class Room implements IRoom {
       maxBetAmount === this.board.bigBlind &&
       this.board.cards.length === 0 &&
       (this.board.turnPlayerId === this.board.dealerPlayerId ||
-        (activePlayers.length > 2 && this.board.turnPlayerId === this.getSmallBlind().id))
+        (this.getActivePlayers().length > 2 && this.board.turnPlayerId === this.getSmallBlind().id))
     ) {
       return 'nextPlayer'
     }
 
     if (
-      (maxBetAmount > 0 && activePlayers.every(player => player.betting === maxBetAmount)) ||
-      (maxBetAmount === 0 &&
-        this.players.filter(player => player.isActive).every(player => player.checed))
+      (maxBetAmount > 0 &&
+        this.getActivePlayers().every(player => player.betting === maxBetAmount)) ||
+      (maxBetAmount === 0 && this.getActivePlayers().every(player => player.checed))
     ) {
       return 'revealNextCard'
     }
@@ -220,7 +220,7 @@ export class Room implements IRoom {
     if (!nextPlayer) {
       throw new Error('Logic error: there is only 0 or 1 active player')
     }
-    if (!nextPlayer.isActive) {
+    if (!nextPlayer.canHasTurn()) {
       return this.getNextTurnPlayer(nextPlayer)
     }
     return nextPlayer

@@ -17,6 +17,10 @@ export class Player implements IPlayer {
     this.position = position
   }
 
+  canHasTurn() {
+    return this.isActive && this.hand.length > 0 && this.stack > 0
+  }
+
   setHand() {
     this.hand = [new Card(), new Card()]
   }
