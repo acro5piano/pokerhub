@@ -16,6 +16,7 @@ module.exports = {
   resolve: {
     extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.json'],
     alias: {
+      '~': path.resolve(__dirname, 'src'),
       'react-native': 'react-native-web',
     },
   },
@@ -23,6 +24,7 @@ module.exports = {
     port,
     host: '0.0.0.0',
     historyApiFallback: true,
+    contentBase: path.resolve(__dirname, 'src/assets/avatars'),
   },
   module: {
     rules: [

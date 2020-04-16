@@ -30,11 +30,11 @@ const OpacityWrapper = webStyled.div<{ isTurn: boolean }>`
     `}
 `
 
-const Container = styled.View<{ isFolded: boolean }>`
+const Container = styled.View<{ isFolded: boolean; avatarImageUrl: string }>`
   width: 100px
   height: 100px
   border-radius: 50%;
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTX-3KzGUJNm5E5QrbHxRaCCPVqC2axFXJO1ztwEY7IKEkjKP3f&usqp=CAU');
+  background-image: url(${p => p.avatarImageUrl});
   background-size: cover;
   border: solid 2px ${p => (p.isFolded ? '#666' : '#ccc')};
   transform: scale(${p => (p.isFolded ? 0.8 : 1)});
@@ -71,7 +71,7 @@ export function Avatar({ isTurn, player }: AvatarProps) {
   return (
     <View>
       <OpacityWrapper isTurn={isTurn}>
-        <Container isFolded={isFolded}>
+        <Container isFolded={isFolded} avatarImageUrl={player.avatarImageUrl}>
           <Mask isFolded={isFolded}>
             <StackWrap>
               <Typography>{player.id}</Typography>

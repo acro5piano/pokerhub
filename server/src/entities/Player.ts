@@ -12,6 +12,7 @@ export class Player implements IPlayer {
   isActive = true
   isDead = false
   checed = false
+  avatarImageUrl = `/${(Math.floor(Math.random() * 100) % 11) + 1}.jpg`
 
   constructor(playerId: string, position: number) {
     this.id = playerId

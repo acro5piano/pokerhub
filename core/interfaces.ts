@@ -79,6 +79,7 @@ export interface Player {
   isActive: boolean
   isDead: boolean
   checed: boolean
+  avatarImageUrl: string
 }
 
 export interface Board {

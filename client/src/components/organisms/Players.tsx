@@ -41,12 +41,15 @@ interface PlayersProps {
 }
 
 export function Players({ board, showDown, players, userPosition }: PlayersProps) {
-  const getRelativePosition = React.useCallback(theirPosition => {
-    const allPlayers = players.length + 1 // including me
-    return (
-      ((allPlayers + theirPosition - userPosition) % allPlayers) * Math.floor(1 + 12 / allPlayers)
-    )
-  }, [])
+  const getRelativePosition = React.useCallback(
+    theirPosition => {
+      const allPlayers = players.length + 1 // including me
+      return (
+        ((allPlayers + theirPosition - userPosition) % allPlayers) * Math.floor(1 + 12 / allPlayers)
+      )
+    },
+    [players.length],
+  )
 
   return (
     <Container>
@@ -54,8 +57,6 @@ export function Players({ board, showDown, players, userPosition }: PlayersProps
         <PlayerWrap key={player.id} relativePosition={getRelativePosition(player.position)}>
           {board.dealerPlayerId === player.id && <DealerButton />}
           <Avatar isTurn={board.turnPlayerId === player.id} player={player} />
-          <div>position: {player.position}</div>
-          <div>relativePosition: {getRelativePosition(player.position)}</div>
           <Betting>{player.betting > 0 && <Dollar amount={player.betting} />}</Betting>
           {showDown && player.isActive && <Hand cards={player.hand} />}
         </PlayerWrap>
