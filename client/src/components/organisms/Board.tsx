@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
 import { Dimensions, View } from 'react-native'
-import { Board } from '@fastpoker/core'
+import { Board } from '@pokerhub/core'
 import { PlayingCard } from '../atoms/PlayingCard'
 import { Typography } from '../atoms/Typography'
 import { Dollar } from '../molecules/Dollar'

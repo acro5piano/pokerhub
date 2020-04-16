@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Board, Player } from '@fastpoker/core'
+import { Board, Player } from '@pokerhub/core'
 import styled from 'styled-components/native'
 import { DealerButton } from '../atoms/DealerButton'
 import { Dollar } from '../molecules/Dollar'

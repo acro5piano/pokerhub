@@ -1,5 +1,5 @@
 import React from 'react'
-import { Room } from '@fastpoker/core'
+import { Room } from '@pokerhub/core'
 import { useSocket } from './useWebSocket'
 import { AppContext } from '../services/initializeApp'
 

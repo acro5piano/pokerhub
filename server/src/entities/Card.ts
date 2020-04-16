@@ -1,4 +1,4 @@
-import { times, Card as ICard, CardNum, CardSym } from '@fastpoker/core'
+import { times, Card as ICard, CardNum, CardSym } from '@pokerhub/core'
 
 export const getSerializedCard = () => [
   ...times(13, (i: any) => {

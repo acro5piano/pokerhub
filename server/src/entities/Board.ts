@@ -1,4 +1,4 @@
-import { Board as IBoard } from '@fastpoker/core'
+import { Board as IBoard } from '@pokerhub/core'
 import { Card } from './Card'
 
 export const DEFAULT_BIG_BLIND = 100

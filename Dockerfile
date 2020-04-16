@@ -4,4 +4,4 @@ WORKDIR /app
 ADD . /app
 RUN yarn install --production
 
-CMD yarn workspace @fastpoker/server start
+CMD yarn workspace @pokerhub/server start

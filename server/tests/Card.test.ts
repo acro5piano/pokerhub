@@ -1,6 +1,6 @@
 import test from 'ava'
 import { Card } from '../src/entities'
-import { times } from '@fastpoker/core'
+import { times } from '@pokerhub/core'
 
 // To ensure card generation
 test('getWinners', t => {

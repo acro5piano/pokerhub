@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Card } from '@fastpoker/core'
+import { Card } from '@pokerhub/core'
 
 interface PlayingCardProps {
   card: Card

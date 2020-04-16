@@ -1,6 +1,6 @@
 import React from 'react'
 import { View } from 'react-native'
-import { Card } from '@fastpoker/core'
+import { Card } from '@pokerhub/core'
 import { PlayingCard } from '../atoms/PlayingCard'
 
 interface HandProps {

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components/native'
-import { Player } from '@fastpoker/core'
+import { Player } from '@pokerhub/core'
 import { Hand } from '../molecules/Hand'
 import { Dollar } from '../molecules/Dollar'
 import { DealerButton } from '../atoms/DealerButton'

@@ -2,4 +2,4 @@ build:
   docker:
     web: Dockerfile
 run:
-  web: yarn workspace @fastpoker/server start
+  web: yarn workspace @pokerhub/server start

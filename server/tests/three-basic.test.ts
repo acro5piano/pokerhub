@@ -1,5 +1,5 @@
 import test from 'ava'
-import { times } from '@fastpoker/core'
+import { times } from '@pokerhub/core'
 import store from '../src/store'
 import { Card, getSerializedCard, DEFALT_STACK } from '../src/entities'
 

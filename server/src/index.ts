@@ -1,5 +1,5 @@
 import WebSocket from 'ws'
-import { PokerAction } from '@fastpoker/core'
+import { PokerAction } from '@pokerhub/core'
 import store from './store'
 
 const port = Number(process.env.PORT) || 30762

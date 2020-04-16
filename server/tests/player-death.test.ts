@@ -1,7 +1,7 @@
 import test from 'ava'
 import store from '../src/store'
 import { Card, DEFALT_STACK } from '../src/entities'
-import { times } from '@fastpoker/core'
+import { times } from '@pokerhub/core'
 
 const cardSeed = [
   // player1

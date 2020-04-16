@@ -1,4 +1,4 @@
-import { Player as IPlayer } from '@fastpoker/core'
+import { Player as IPlayer } from '@pokerhub/core'
 import { Card } from './Card'
 
 export const DEFALT_STACK = 5000

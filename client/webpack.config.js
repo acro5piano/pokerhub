@@ -58,7 +58,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-      'process.env.PRODUCTION_WS_HOST': JSON.stringify('fastpoker.herokuapp.com'),
+      'process.env.PRODUCTION_WS_HOST': JSON.stringify('pokerhub.herokuapp.com'),
     }),
   ],
 }

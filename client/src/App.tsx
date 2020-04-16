@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
-import { getRandomString } from '@fastpoker/core'
+import { getRandomString } from '@pokerhub/core'
 import { useRoomDispatch } from './hooks'
 import { Button } from './components/atoms/Button'
 import { ActionWindow } from './components/organisms/ActionWindow'

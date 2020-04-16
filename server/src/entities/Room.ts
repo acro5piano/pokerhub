@@ -1,4 +1,4 @@
-import { Room as IRoom, times } from '@fastpoker/core'
+import { Room as IRoom, times } from '@pokerhub/core'
 import { Player } from './Player'
 import { Card } from './Card'
 import { Board } from './Board'

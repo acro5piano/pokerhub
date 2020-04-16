@@ -1,9 +1,9 @@
 {
-  "name": "fastpoker",
+  "name": "pokerhub",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
-  "repository": "git@github.com:acro5piano/fastpoker",
+  "repository": "git@github.com:acro5piano/pokerhub",
   "author": "gosho-kazuya <ketsume0211@gmail.com>",
   "license": "MIT",
   "workspaces": {
@@ -15,7 +15,7 @@
   },
   "scripts": {
     "dev": "wsrun -m --parallel dev",
-    "tsc": "wsrun --parallel --exclude @fastpoker/core tsc",
+    "tsc": "wsrun --parallel --exclude @pokerhub/core tsc",
     "test": "wsrun --exclude-missing test"
   },
   "devDependencies": {

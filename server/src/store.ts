@@ -1,5 +1,5 @@
 import { createStore } from 'redux'
-import { PokerAction } from '@fastpoker/core'
+import { PokerAction } from '@pokerhub/core'
 import { Repository } from './repositories'
 
 function reducer(repository: Repository = new Repository(), action: PokerAction): Repository {

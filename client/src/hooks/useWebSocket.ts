@@ -1,5 +1,5 @@
 import React from 'react'
-import { PokerAction, Room } from '@fastpoker/core'
+import { PokerAction, Room } from '@pokerhub/core'
 
 type Handler = (p: Room) => void
 type Send = (p: PokerAction) => void

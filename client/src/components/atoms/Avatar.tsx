@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Player } from '@fastpoker/core'
+import { Player } from '@pokerhub/core'
 import { View } from 'react-native'
 import styled from 'styled-components/native'
 import webStyled from 'styled-components'
