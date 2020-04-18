@@ -12,6 +12,7 @@ export class Board implements IBoard {
   bigBlind = DEFAULT_BIG_BLIND
   anti = 0
   showDown = false
+  winningHand = ''
 
   private blindIncreasedAt = Date.now()
 

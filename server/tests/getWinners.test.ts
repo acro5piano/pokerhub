@@ -29,12 +29,13 @@ test('flush', t => {
     new Card(6, 'heart'),
   ])
 
-  const winners = getWinners(communityCards, [player1, player2])
+  const { winners, hand } = getWinners(communityCards, [player1, player2])
   t.is(winners.length, 1)
   t.is(winners[0].id, 'player1')
+  t.is(hand, 'Flush, Ac High')
 })
 
-test('getWinners', t => {
+test('chop', t => {
   // prettier-ignore
   const communityCards = [
     new Card ( 7, 'spade' ),
@@ -56,6 +57,8 @@ test('getWinners', t => {
     new Card(6, 'spade'),
   ])
 
-  const winners = getWinners(communityCards, [player1, player2])
+  const { winners, hand } = getWinners(communityCards, [player1, player2])
+
+  t.is(hand, 'Straight Flush, Js High')
   t.is(winners.length, 2)
 })

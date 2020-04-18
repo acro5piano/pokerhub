@@ -90,6 +90,7 @@ export interface Board {
   bigBlind: number
   anti: number
   showDown: boolean
+  winningHand: string
 }
 
 export interface Room {
