@@ -1,7 +1,7 @@
 import React from 'react'
 import { ActivityIndicator, View } from 'react-native'
 import { getRandomString } from '@pokerhub/core'
-import { useRoomDispatch } from './hooks'
+import { useRoomDispatch, useRing } from './hooks'
 import { Button } from './components/atoms/Button'
 import { ActionWindow } from './components/organisms/ActionWindow'
 import { MyHand } from './components/organisms/MyHand'
@@ -95,6 +95,10 @@ export function App() {
     userId,
   ])
   const me = React.useMemo(() => room?.players.find(p => p.id === userId), [room?.players, userId])
+
+  useRing({
+    ring: isMyTurn,
+  })
 
   if (!dispatch || !room || !roomId || !userId) {
     return (
