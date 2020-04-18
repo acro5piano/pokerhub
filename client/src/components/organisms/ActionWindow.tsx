@@ -35,6 +35,14 @@ export function ActionWindow({
   onCheck,
   stack,
 }: ActionWindowProps) {
+  // TODO: Ideally, we should skip the turn if the player stack is 0,
+  // but for now, we skip manually here
+  React.useEffect(() => {
+    if (stack === 0) {
+      onCheck()
+    }
+  }, [stack])
+
   return (
     <Container>
       <Col>
