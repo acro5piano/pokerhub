@@ -96,7 +96,11 @@ export class Room implements IRoom {
 
   onCurrentPlayerCall() {
     const toBeAdded = this.getCurrentMaximumBet() - this.getCurrentTurnPlayer().betting
-    this.getCurrentTurnPlayer().bet(toBeAdded)
+    if (toBeAdded > this.getCurrentTurnPlayer().stack) {
+      this.getCurrentTurnPlayer().bet(this.getCurrentTurnPlayer().stack)
+    } else {
+      this.getCurrentTurnPlayer().bet(toBeAdded)
+    }
     this.board.pot += toBeAdded
     this.proceedToNextTurn()
   }

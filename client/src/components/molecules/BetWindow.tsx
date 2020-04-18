@@ -45,10 +45,13 @@ export function BetWindow({ onBet, maximumBetting = 0, stack }: BetWindowProps) 
       return false
     }
     const _amount = Number(amount)
-    if (amount === '' || Number.isNaN(_amount)) {
-      return true
-    }
-    return (_amount === 0 && _amount < maximumBetting) || stack < _amount
+    return (
+      amount === '' ||
+      Number.isNaN(_amount) ||
+      _amount <= 0 ||
+      (_amount === 0 && _amount < maximumBetting) ||
+      stack < _amount
+    )
   }, [show, amount, maximumBetting, stack])
 
   return (
