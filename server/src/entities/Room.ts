@@ -5,7 +5,12 @@ import { Board } from './Board'
 
 const { Hand } = require('pokersolver')
 
-export function getWinners(communityCards: Card[], players: Player[]): Player[] {
+interface Winners {
+  winners: Player[]
+  hand: string
+}
+
+export function getWinners(communityCards: Card[], players: Player[]): Winners {
   const communityCardsSolverirzed = communityCards.map(card => card.toSolverValue())
   const hands = players.map(player => {
     const hand = Hand.solve([
@@ -15,8 +20,12 @@ export function getWinners(communityCards: Card[], players: Player[]): Player[] 
     hand.__ID = player.id
     return hand
   })
-  const winnersIDs = Hand.winners(hands).map((hand: any) => hand.__ID)
-  return players.filter(player => winnersIDs.includes(player.id))
+  const winners = Hand.winners(hands)
+  const winnersIDs = winners.map((hand: any) => hand.__ID)
+  return {
+    winners: players.filter(player => winnersIDs.includes(player.id)),
+    hand: winners[0].descr,
+  }
 }
 
 export class Room implements IRoom {
@@ -111,7 +120,7 @@ export class Room implements IRoom {
   }
 
   calculateShowDownResult() {
-    const winners = getWinners(this.board.cards, this.getActivePlayers())
+    const { winners } = getWinners(this.board.cards, this.getActivePlayers())
     const losers = this.getActivePlayers().filter(
       player => !Boolean(winners.find(w => w.id === player.id)),
     )
@@ -138,15 +147,21 @@ export class Room implements IRoom {
           player.checed = false
         })
         this.board.turnPlayerId = this.getNextTurnPlayer(this.getDealer()).id
-        if (this.board.cards.length === 0) {
-          times(3, () => this.board.openCard())
-        } else if (this.board.cards.length < 5) {
-          this.board.openCard()
+        if (this.board.cards.length < 5) {
+          if (this.board.cards.length === 0) {
+            times(3, () => this.board.openCard())
+          } else if (this.board.cards.length < 5) {
+            this.board.openCard()
+          }
+          if (this.isEveryoneAllIn()) {
+            this.proceedToNextTurn()
+          }
         } else {
           if (this.board.showDown) {
             throw new Error('already show down!')
           }
           this.board.showDown = true // SHOW DOWN!!
+          this.board.winningHand = getWinners(this.board.cards, this.getActivePlayers()).hand
         }
         return
       }
@@ -180,6 +195,10 @@ export class Room implements IRoom {
     return this.players.filter(player => player.canHasTurn())
   }
 
+  private isEveryoneAllIn() {
+    return this.getActivePlayers().filter(player => player.stack > 0).length === 0
+  }
+
   private getBoardState(): 'revealNextCard' | 'folded' | 'nextPlayer' {
     const maxBetAmount = this.getCurrentMaximumBet()
 
@@ -187,19 +206,23 @@ export class Room implements IRoom {
       return 'folded'
     }
 
-    if (
-      maxBetAmount === this.board.bigBlind &&
-      this.board.cards.length === 0 &&
-      (this.board.turnPlayerId === this.board.dealerPlayerId ||
-        (this.getActivePlayers().length > 2 && this.board.turnPlayerId === this.getSmallBlind().id))
-    ) {
-      return 'nextPlayer'
+    // Pre-flop
+    if (this.board.cards.length === 0) {
+      if (
+        maxBetAmount === this.board.bigBlind &&
+        (this.board.turnPlayerId === this.board.dealerPlayerId ||
+          (this.getActivePlayers().length > 2 &&
+            this.board.turnPlayerId === this.getSmallBlind().id))
+      ) {
+        return 'nextPlayer'
+      }
     }
 
     if (
       (maxBetAmount > 0 &&
         this.getActivePlayers().every(player => player.betting === maxBetAmount)) ||
-      (maxBetAmount === 0 && this.getActivePlayers().every(player => player.checed))
+      (maxBetAmount === 0 && this.getActivePlayers().every(player => player.checed)) ||
+      this.isEveryoneAllIn()
     ) {
       return 'revealNextCard'
     }

@@ -3,7 +3,7 @@ import { Card } from '../src/entities'
 import { times } from '@pokerhub/core'
 
 // To ensure card generation
-test('getWinners', t => {
+test('randomizeSeed', t => {
   Card.randomizeSeed()
   times(50, () => {
     new Card()

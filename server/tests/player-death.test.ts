@@ -1,7 +1,6 @@
 import test from 'ava'
 import store from '../src/store'
 import { Card, DEFALT_STACK } from '../src/entities'
-import { times } from '@pokerhub/core'
 
 const cardSeed = [
   // player1
@@ -60,9 +59,10 @@ test('Player death', t => {
     },
   })
 
-  t.is(store.getState().findRoom(roomId).board.pot, 5100)
+  t.is(store.getState().findRoom(roomId).board.pot, 100 + DEFALT_STACK)
   t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player2')
   t.is(store.getState().findRoom(roomId).players[0].stack, 0)
+  t.is(store.getState().findRoom(roomId).players[0].betting, DEFALT_STACK)
   t.is(store.getState().findRoom(roomId).players[0].isDead, false)
   t.is(store.getState().findRoom(roomId).players[1].stack, DEFALT_STACK - 100)
 
@@ -74,20 +74,11 @@ test('Player death', t => {
     },
   })
 
-  t.is(store.getState().findRoom(roomId).board.pot, 10000)
+  t.is(store.getState().findRoom(roomId).board.pot, DEFALT_STACK * 2)
   t.is(store.getState().findRoom(roomId).board.turnPlayerId, 'player2')
   t.is(store.getState().findRoom(roomId).players[0].stack, 0)
   t.is(store.getState().findRoom(roomId).players[1].stack, 0)
   t.is(store.getState().findRoom(roomId).players[1].isDead, false)
-
-  times(6, () => {
-    store.dispatch({
-      type: 'CHECK',
-      payload: {
-        roomId,
-      },
-    })
-  })
 
   t.is(store.getState().findRoom(roomId).board.showDown, true)
 

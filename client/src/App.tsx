@@ -7,6 +7,7 @@ import { ActionWindow } from './components/organisms/ActionWindow'
 import { MyHand } from './components/organisms/MyHand'
 import { Board } from './components/organisms/Board'
 import { Players } from './components/organisms/Players'
+import { HandIndicator } from './components/organisms/HandIndicator'
 import { AppContainer } from './components/atoms/AppContainer'
 import { GlobalStyle } from './GlobalStyle'
 import { initializeApp } from './services/initializeApp'
@@ -35,6 +36,66 @@ export function App() {
     }
   }, [room?.board.showDown])
 
+  const start = React.useCallback(() => {
+    dispatch &&
+      dispatch({
+        type: 'START_GAME',
+        payload: {
+          roomId,
+        },
+      })
+  }, [dispatch, roomId])
+
+  const bet = React.useCallback(
+    (amount: number) => {
+      dispatch &&
+        dispatch({
+          type: 'BET',
+          payload: {
+            roomId,
+            amount,
+          },
+        })
+    },
+    [dispatch, roomId],
+  )
+
+  const check = React.useCallback(() => {
+    dispatch &&
+      dispatch({
+        type: 'CHECK',
+        payload: {
+          roomId,
+        },
+      })
+  }, [dispatch, roomId])
+
+  const call = React.useCallback(() => {
+    dispatch &&
+      dispatch({
+        type: 'CALL',
+        payload: {
+          roomId,
+        },
+      })
+  }, [dispatch, roomId])
+
+  const fold = React.useCallback(() => {
+    dispatch &&
+      dispatch({
+        type: 'FOLD',
+        payload: {
+          roomId,
+        },
+      })
+  }, [dispatch, roomId])
+
+  const isMyTurn = React.useMemo(() => room?.board.turnPlayerId === userId, [
+    room?.board.turnPlayerId,
+    userId,
+  ])
+  const me = React.useMemo(() => room?.players.find(p => p.id === userId), [room?.players, userId])
+
   if (!dispatch || !room || !roomId || !userId) {
     return (
       <AppContainer>
@@ -42,55 +103,6 @@ export function App() {
       </AppContainer>
     )
   }
-
-  const start = () => {
-    dispatch({
-      type: 'START_GAME',
-      payload: {
-        roomId,
-      },
-    })
-  }
-
-  const bet = (amount: number) => {
-    dispatch({
-      type: 'BET',
-      payload: {
-        roomId,
-        amount,
-      },
-    })
-  }
-
-  const check = () => {
-    dispatch({
-      type: 'CHECK',
-      payload: {
-        roomId,
-      },
-    })
-  }
-
-  const call = () => {
-    dispatch({
-      type: 'CALL',
-      payload: {
-        roomId,
-      },
-    })
-  }
-
-  const fold = () => {
-    dispatch({
-      type: 'FOLD',
-      payload: {
-        roomId,
-      },
-    })
-  }
-
-  const isMyTurn = room.board.turnPlayerId === userId
-  const me = room.players.find(p => p.id === userId)
 
   if (!room.isGameStarted || !me) {
     return (
@@ -133,6 +145,7 @@ export function App() {
           />
         )}
       </View>
+      {room.board.showDown && <HandIndicator winningHand={room.board.winningHand} />}
     </AppContainer>
   )
 }
