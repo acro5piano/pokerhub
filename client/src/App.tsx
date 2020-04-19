@@ -32,7 +32,7 @@ export function App() {
             roomId,
           },
         })
-      }, 3000)
+      }, 5000)
     }
   }, [room?.board.showDown])
 

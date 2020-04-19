@@ -32,7 +32,7 @@ export class Player implements IPlayer {
   }
 
   bet(amount: number): void {
-    if (this.isDead) {
+    if (this.isDead || this.stack <= 0) {
       return
     }
     this.stack -= amount

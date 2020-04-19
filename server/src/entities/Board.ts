@@ -2,7 +2,7 @@ import { Board as IBoard } from '@pokerhub/core'
 import { Card } from './Card'
 
 export const DEFAULT_BIG_BLIND = 100
-export const BLIND_INCREASE_TIME = 300 * 1000 // => 5 min
+export const BLIND_INCREASE_TIME = 180 * 1000 // => 5 min
 
 export class Board implements IBoard {
   cards: Card[] = []
